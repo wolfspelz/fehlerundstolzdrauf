@@ -12,7 +12,7 @@ Kein Name. Keine Entschuldigung. Nur was passiert ist. Und was danach kam.
 
 | Spalte | Inhalt | Stil |
 |---|---|---|
-| **Kurze Fälle** | Anonyme Kurzgeschichten über Scheitern (80-120 Wörter) | Hemingway: kurze Sätze, direkt, kein Pathos |
+| **Kurze Fälle** | Anonyme Kurzgeschichten über Scheitern (80-120 Wörter). Überschriften variieren im Muster (nicht immer "Artikel + Substantiv"), z.B. Zahl+Zeitspanne, Kurzurteil, kurzer Satz | Hemingway: kurze Sätze, direkt, kein Pathos |
 | **Diese Woche** | Featured Story, länger, mit Zitat-Block | Größere Schrift, Drop Cap, italic Titel |
 | **Zahlen** | Statistiken + Einreichen-Hinweis | Große Zahlen (Playfair Display), kurze Erklärung |
 | **Zitate** | Bekannte Zitate über Fehler/Scheitern (keine Privatpersonen) | Special Elite Font (Schreibmaschine) |
