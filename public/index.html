@@ -4,20 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fehler & Stolz drauf</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --black: #0e0e0e;
-    --white: #f7f4ef;
+    --black: #1a1612;
+    --white: #f5f0e8;
     --grey: #6b6560;
-    --red: #9b2020;
-    --line: rgba(107,101,96,0.3);
+    --red: #8b1a1a;
+    --line: rgba(107,101,96,0.35);
+    --ink: #2a2520;
   }
 
   html {
-    background: var(--white);
+    background: #ffffff;
     color: var(--black);
   }
 
@@ -27,48 +28,85 @@
     min-height: 100vh;
     margin: 0 auto;
     background: var(--white);
+    box-shadow: 0 0 70px rgba(0,0,0,0.17);
+    border-left: 1px solid rgba(0,0,0,0.06);
+    border-right: 1px solid rgba(0,0,0,0.06);
   }
 
-  /* Grain */
+  /* Paper grain */
   body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 200;
+  }
+
+  /* Ink bleed effect on text */
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   .page {
     width: 100%;
     min-height: 100vh;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto 1fr auto;
+  }
+
+  /* ── MASTHEAD ── */
+  .dateline {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
+    color: var(--grey);
+    text-transform: uppercase;
+    text-align: center;
+    padding: 14px 44px 0;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 8px;
   }
 
   /* ── HEADER ── */
   header {
-    padding: 36px 44px 24px;
+    padding: 20px 44px 20px;
     border-bottom: 3px solid var(--black);
     display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
     gap: 20px;
+  }
+
+  .header-left-ornament,
+  .header-right-ornament {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.2rem;
+    color: var(--line);
+    text-align: center;
+  }
+
+  .header-left-ornament { text-align: left; }
+  .header-right-ornament { text-align: right; }
+
+  .header-center {
+    text-align: center;
   }
 
   .issue {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
     color: var(--grey);
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
 
   h1 {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 3.8rem;
-    line-height: 0.95;
+    font-size: 4.2rem;
+    line-height: 0.92;
     font-weight: 700;
     letter-spacing: -0.02em;
   }
@@ -78,18 +116,14 @@
     color: var(--red);
   }
 
-  .header-right {
-    text-align: right;
-    padding-bottom: 6px;
-  }
-
-  .header-right p {
+  .subtitle {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.68rem;
+    font-size: 0.62rem;
     color: var(--grey);
     line-height: 1.7;
     font-style: italic;
-    max-width: 160px;
+    margin-top: 10px;
+    letter-spacing: 0.05em;
   }
 
   /* ── MAIN ── */
@@ -97,6 +131,7 @@
     display: grid;
     grid-template-columns: 1.2fr 1px 1.5fr 1px 1fr 1px 1fr;
     overflow: hidden;
+    border-top: 1px solid var(--line);
   }
 
   .divider {
@@ -106,7 +141,7 @@
 
   /* ── COLUMN ── */
   .col {
-    padding: 28px 30px;
+    padding: 24px 28px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -115,19 +150,31 @@
 
   .col-label {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.28em;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--grey);
-    margin-bottom: 22px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--black);
+    position: relative;
+  }
+
+  .col-label::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--black);
   }
 
   /* ── ENTRY ── */
   .entry {
-    margin-bottom: 26px;
-    padding-bottom: 26px;
+    margin-bottom: 22px;
+    padding-bottom: 22px;
     border-bottom: 1px solid var(--line);
   }
 
@@ -138,61 +185,75 @@
 
   .entry-year {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     letter-spacing: 0.15em;
     color: var(--grey);
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
 
   .entry-title {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 1.02rem;
+    font-size: 1.05rem;
     font-weight: 700;
     line-height: 1.25;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .entry-title.italic { font-style: italic; font-weight: 400; }
 
   .entry-text {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 0.78rem;
-    line-height: 1.75;
-    color: #2a2520;
+    font-size: 0.76rem;
+    line-height: 1.7;
+    color: var(--ink);
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  /* Drop cap for first entry in featured */
+  .featured .entry-text:first-of-type::first-letter {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3.2rem;
+    font-weight: 700;
+    float: left;
+    line-height: 0.8;
+    margin-right: 6px;
+    margin-top: 4px;
+    color: var(--red);
   }
 
   /* ── FEATURED (col 2) ── */
   .featured .entry-title {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-style: italic;
     margin-bottom: 14px;
     line-height: 1.2;
   }
 
   .featured .entry-text {
-    font-size: 0.85rem;
-    line-height: 1.8;
+    font-size: 0.82rem;
+    line-height: 1.75;
   }
 
   .quote-block {
-    margin: 20px 0;
-    padding: 16px 0 16px 16px;
+    margin: 18px 0;
+    padding: 14px 0 14px 14px;
     border-left: 3px solid var(--red);
   }
 
   .quote-block p {
     font-family: 'Playfair Display', Georgia, serif;
     font-style: italic;
-    font-size: 1.05rem;
-    line-height: 1.55;
+    font-size: 1rem;
+    line-height: 1.5;
     color: var(--red);
   }
 
   /* ── QUOTES ── */
   .quote-entry {
-    margin-bottom: 28px;
-    padding-bottom: 28px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
     border-bottom: 1px solid var(--line);
   }
 
@@ -202,20 +263,30 @@
   }
 
   .quote-entry blockquote {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-style: italic;
-    font-size: 0.88rem;
+    font-family: 'Special Elite', 'Courier Prime', monospace;
+    font-size: 0.82rem;
     line-height: 1.6;
-    color: var(--black);
+    color: var(--ink);
     margin-bottom: 8px;
   }
 
   .quote-entry cite {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.6rem;
+    font-size: 0.56rem;
     color: var(--grey);
     font-style: normal;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── BIG NUMBERS ── */
+  .big-number {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+    display: block;
   }
 
   /* ── FOOTER ── */
@@ -224,20 +295,20 @@
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    padding: 12px 44px;
+    padding: 10px 44px;
   }
 
   .footer-left {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.2em;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
     color: var(--grey);
     text-transform: uppercase;
   }
 
   .footer-center {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-style: italic;
     color: var(--grey);
     text-align: center;
@@ -245,29 +316,37 @@
 
   .footer-right {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.58rem;
-    letter-spacing: 0.2em;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
     color: var(--grey);
     text-transform: uppercase;
     text-align: right;
   }
 
+  .footer-left a {
+    color: var(--grey);
+    text-decoration: none;
+  }
+
   @media print {
     @page { size: A3 landscape; margin: 0; }
+    html { background: white; }
+    body { box-shadow: none; border: none; }
   }
 </style>
 </head>
 <body>
 <div class="page">
 
+  <div class="dateline">Berlin &nbsp;·&nbsp; Ausgabe Nr. 014 &nbsp;·&nbsp; März 2026 &nbsp;·&nbsp; Kostenlos &nbsp;·&nbsp; Unabhängig</div>
+
   <header>
-    <div>
-      <div class="issue">Nr. 014 &nbsp;·&nbsp; März 2026 &nbsp;·&nbsp; Kostenlos</div>
-      <h1>Fehler<br><em>&amp; Stolz drauf</em></h1>
+    <div class="header-left-ornament">&#10038;</div>
+    <div class="header-center">
+      <h1>Fehler <em>&amp; Stolz drauf</em></h1>
+      <div class="subtitle">Menschen erzählen ihre größten Misserfolge. Und was daraus wurde.</div>
     </div>
-    <div class="header-right">
-      <p>Menschen erzählen ihre größten Misserfolge. Und was daraus wurde.</p>
-    </div>
+    <div class="header-right-ornament">&#10038;</div>
   </header>
 
   <main>
@@ -333,17 +412,17 @@
       <div class="col-label">Zahlen</div>
 
       <div class="entry">
-        <div class="entry-title" style="font-size:2.8rem; font-weight:700; line-height:1; margin-bottom:8px;">4.200</div>
+        <span class="big-number">4.200</span>
         <p class="entry-text">Geschichten eingereicht seit 2019.</p>
       </div>
 
       <div class="entry">
-        <div class="entry-title" style="font-size:2.8rem; font-weight:700; line-height:1; margin-bottom:8px; color:var(--red);">91%</div>
+        <span class="big-number" style="color:var(--red);">91%</span>
         <p class="entry-text">Sagen, das Scheitern war notwendig.</p>
       </div>
 
       <div class="entry">
-        <div class="entry-title" style="font-size:2.8rem; font-weight:700; line-height:1; margin-bottom:8px;">1</div>
+        <span class="big-number">1</span>
         <p class="entry-text">Regel: Kein Name. Keine Entschuldigung. Nur was passiert ist. Und was danach kam.</p>
       </div>
 
@@ -392,7 +471,7 @@
   </main>
 
   <footer>
-    <div class="footer-left"><a href="./" style="color:var(--grey);text-decoration:none;">fehlerundstolzdrauf.de</a></div>
+    <div class="footer-left"><a href="./">fehlerundstolzdrauf.de</a></div>
     <div class="footer-center">· · ·</div>
     <div class="footer-right">Keine Werbung. Kein Algorithmus.</div>
   </footer>
