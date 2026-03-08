@@ -328,6 +328,40 @@
     text-decoration: none;
   }
 
+  /* ── RESPONSIVE ── */
+
+  @media (max-width: 900px) {
+    main {
+      display: flex;
+      flex-direction: column;
+    }
+    .divider {
+      height: 1px;
+      width: 100%;
+    }
+    header {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 20px 20px 16px;
+    }
+    .header-left-ornament,
+    .header-right-ornament {
+      display: none;
+    }
+    h1 { font-size: 2.4rem; }
+    .subtitle { max-width: 280px; margin-left: auto; margin-right: auto; }
+    .col { padding: 20px; overflow: visible; }
+    .entry-text { text-align: left; }
+    footer {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 4px;
+      padding: 12px 20px;
+    }
+    .footer-left, .footer-right { text-align: center; }
+    .dateline { padding: 10px 20px 6px; font-size: 0.55rem; }
+  }
+
   @media print {
     @page { size: A3 landscape; margin: 0; }
     html { background: white; }
