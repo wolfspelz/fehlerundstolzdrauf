@@ -52,6 +52,11 @@ CREATE TABLE IF NOT EXISTS edition_cache (
     date TEXT PRIMARY KEY,
     content_json TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS edition_resets (
+    date TEXT PRIMARY KEY,
+    count INTEGER DEFAULT 1
+);
 `
 
 func Init(dbPath string) error {

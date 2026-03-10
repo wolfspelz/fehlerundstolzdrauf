@@ -205,6 +205,15 @@ func HandleCreateHistorical(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "status": "ok"})
 }
 
+func HandleResetEdition(w http.ResponseWriter, r *http.Request) {
+	if err := rotation.ResetEdition(rotation.Today()); err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+}
+
 func HandleStats(w http.ResponseWriter, r *http.Request) {
 	stats := make(map[string]interface{})
 

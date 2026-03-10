@@ -1,7 +1,21 @@
 {
   "permissions": {
     "allow": [
-      "Bash(docker build:*)"
+      "Bash(docker build:*)",
+      "Bash(docker run:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(sqlite3 -header -column /home/wolf/github-fehlerundstolzdrauf/data/fehlerundstolzdrauf.db \"SELECT id, year, title, status, shown_count FROM stories\")",
+      "Bash(sqlite3 -header -column /home/wolf/github-fehlerundstolzdrauf/data/fehlerundstolzdrauf.db \"SELECT id, year, title, substr\\(text, 1, 80\\) || '...' as text, status FROM stories ORDER BY id\")",
+      "Bash(mkdir -p /home/wolf/github-fehlerundstolzdrauf/.claude/skills/redaktion && mv /home/wolf/github-fehlerundstolzdrauf/.claude/skills/redaktion.md /home/wolf/github-fehlerundstolzdrauf/.claude/skills/redaktion/SKILL.md)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://fehlerundstolzdrauf.de/api/edition)",
+      "Bash(export ADMIN_TOKEN=test && curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" \"http://localhost:8080/admin/submissions?status=unmoderated\" | jq .)",
+      "Bash(export ADMIN_TOKEN=test && curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" \"http://localhost:8080/admin/submissions?status=unmoderated\")",
+      "Bash(export ADMIN_TOKEN=test && curl -s -X PUT -H \"Authorization: Bearer $ADMIN_TOKEN\" -H \"Content-Type: application/json\" -d '{\"status\":\"hidden\"}' http://localhost:8080/admin/submissions/16)",
+      "Bash(export ADMIN_TOKEN=test && curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" http://localhost:8080/admin/stats)",
+      "Bash(export ADMIN_TOKEN=test && curl -s -X POST -H \"Authorization: Bearer $ADMIN_TOKEN\" http://localhost:8080/admin/reset-edition)",
+      "Bash(git -C /home/wolf/github-fehlerundstolzdrauf status)",
+      "Bash(git -C /home/wolf/github-fehlerundstolzdrauf diff)",
+      "Bash(git -C /home/wolf/github-fehlerundstolzdrauf log --oneline -5)"
     ]
   }
 }

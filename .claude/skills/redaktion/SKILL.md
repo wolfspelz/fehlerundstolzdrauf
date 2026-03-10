@@ -1,3 +1,8 @@
+---
+description: Wöchentliche Redaktionspflege für fehlerundstolzdrauf.de
+user_invocable: true
+---
+
 # /redaktion – Wöchentliche Redaktionspflege
 
 Dieses Skill dient der wöchentlichen Pflege der Website fehlerundstolzdrauf.de.
@@ -78,7 +83,19 @@ curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: applic
 curl -s -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/stats | jq .
 ```
 
-### 7. Löschen
+### 7. Edition zurücksetzen
+
+Cache löschen und neuen Seed erzwingen, damit `/api/edition` sofort neue Inhalte liefert (ohne bis morgen zu warten).
+
+```bash
+curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/reset-edition
+```
+
+### 8. Beenden
+
+Redaktion beenden. Keine weitere Aktion.
+
+### 9. Löschen
 
 ```bash
 # Typ: stories, featured, quotes, historical

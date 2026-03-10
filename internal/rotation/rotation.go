@@ -2,11 +2,11 @@ package rotation
 
 import (
 	"crypto/sha256"
-	"database/sql"
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 
 	"github.com/wolfspelz/fehlerundstolzdrauf/internal/db"
@@ -51,8 +51,23 @@ type Edition struct {
 }
 
 func dateToSeed(date string) int64 {
-	h := sha256.Sum256([]byte(date))
+	var resetCount int
+	db.DB.QueryRow("SELECT count FROM edition_resets WHERE date = ?", date).Scan(&resetCount)
+	input := date
+	if resetCount > 0 {
+		input = date + "-" + strconv.Itoa(resetCount)
+	}
+	h := sha256.Sum256([]byte(input))
 	return int64(binary.BigEndian.Uint64(h[:8]))
+}
+
+func ResetEdition(date string) error {
+	_, err := db.DB.Exec("INSERT INTO edition_resets (date, count) VALUES (?, 1) ON CONFLICT(date) DO UPDATE SET count = count + 1", date)
+	if err != nil {
+		return err
+	}
+	_, err = db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", date)
+	return err
 }
 
 func GetEdition(date string) (*Edition, error) {

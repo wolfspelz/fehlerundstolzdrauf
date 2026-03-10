@@ -62,6 +62,7 @@ Header: `Authorization: Bearer <ADMIN_TOKEN>`
 | POST | `/admin/quotes` | Neues Zitat |
 | POST | `/admin/historical` | Neuer Historisch-Eintrag |
 | GET | `/admin/stats` | Übersicht |
+| POST | `/admin/reset-edition` | Edition-Cache löschen + neuen Seed erzwingen |
 | DELETE | `/admin/:type/:id` | Löschen |
 
 ### SQLite
@@ -95,7 +96,7 @@ public/index.html            -- Frontend mit JS fetch + Formular
 data/seed.sql                -- Initiale Daten
 Dockerfile                   -- Multi-Stage Go Build
 .github/workflows/cicd.yml   -- CI/CD Pipeline
-.claude/skills/redaktion.md  -- Redaktions-Skill
+.claude/skills/redaktion/SKILL.md  -- Redaktions-Skill
 ```
 
 ## Technischer Stack
@@ -110,7 +111,7 @@ Dockerfile                   -- Multi-Stage Go Build
 ## CI/CD
 
 - **Workflow**: `.github/workflows/cicd.yml`
-- **Trigger**: Push auf `main`
+- **Trigger**: Push auf `deployment`
 - **Ablauf**: Checkout → Docker Login → Build & Push Image → SSH Deploy auf Server
 - **GitHub Secrets** (im Repo konfiguriert):
   - `DOCKERHUB_USERNAME`
@@ -132,7 +133,7 @@ Wöchentliche Pflege via Claude Code:
 
 ## Deployment
 
-- Kein Staging-Environment – Push auf `main` geht direkt in Produktion
+- Kein Staging-Environment – Push auf `deployment` geht direkt in Produktion
 - Server läuft hinter einem Reverse Proxy mit Let's Encrypt (automatisches HTTPS)
 - SQLite-Datenbank:
   - **Lokal**: `data/fehlerundstolzdrauf.db` (im Projektordner, via `DB_PATH=data/fehlerundstolzdrauf.db`)
