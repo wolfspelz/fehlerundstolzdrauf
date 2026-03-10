@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [main]
+    branches: [deployment]
 
 jobs:
   build:
@@ -37,5 +37,6 @@ jobs:
             docker image pull wolfspelz/fehlerundstolzdrauf
             docker container stop fehlerundstolzdrauf-prod
             docker container prune -f
-            docker run -d --name fehlerundstolzdrauf-prod --restart unless-stopped -e LETSENCRYPT_HOST=fehlerundstolzdrauf.de -e VIRTUAL_HOST=fehlerundstolzdrauf.de -e VIRTUAL_PORT=80 --expose=80 --network=web -it wolfspelz/fehlerundstolzdrauf
+            mkdir -p /home/wolf/fehlerundstolzdrauf/data
+            docker run -d --name fehlerundstolzdrauf-prod --restart unless-stopped -e LETSENCRYPT_HOST=fehlerundstolzdrauf.de -e VIRTUAL_HOST=fehlerundstolzdrauf.de -e VIRTUAL_PORT=80 -e ADMIN_TOKEN=${{ secrets.ADMIN_TOKEN }} -v /home/wolf/fehlerundstolzdrauf/data:/data --expose=80 --network=web -it wolfspelz/fehlerundstolzdrauf
             docker image prune -f
