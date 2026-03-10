@@ -289,6 +289,80 @@
     display: block;
   }
 
+  /* ── SUBMIT FORM ── */
+  .submit-form {
+    margin-top: auto;
+  }
+
+  .submit-form input,
+  .submit-form textarea {
+    width: 100%;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.75rem;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--black);
+    padding: 6px 8px;
+    margin-bottom: 8px;
+    outline: none;
+  }
+
+  .submit-form input:focus,
+  .submit-form textarea:focus {
+    border-color: var(--black);
+  }
+
+  .submit-form textarea {
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .submit-form .char-count {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.55rem;
+    color: var(--grey);
+    text-align: right;
+    margin-top: -6px;
+    margin-bottom: 8px;
+  }
+
+  .submit-form .char-count.over {
+    color: var(--red);
+  }
+
+  .submit-form button {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .submit-form button:hover {
+    background: var(--red);
+  }
+
+  .submit-form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .submit-msg {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.65rem;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  .submit-msg.success { color: var(--grey); }
+  .submit-msg.error { color: var(--red); }
+
   /* ── FOOTER ── */
   footer {
     border-top: 3px solid var(--black);
@@ -372,7 +446,7 @@
 <body>
 <div class="page">
 
-  <div class="dateline">Berlin &nbsp;·&nbsp; Ausgabe Nr. 014 &nbsp;·&nbsp; März 2026 &nbsp;·&nbsp; Kostenlos &nbsp;·&nbsp; Unabhängig</div>
+  <div class="dateline" id="dateline">Berlin &nbsp;·&nbsp; Tagesausgabe &nbsp;·&nbsp; <span id="date-display"></span> &nbsp;·&nbsp; Kostenlos &nbsp;·&nbsp; Unabhängig</div>
 
   <header>
     <div class="header-left-ornament">&#10038;</div>
@@ -388,36 +462,7 @@
     <!-- COL 1: Kurze Fälle -->
     <div class="col">
       <div class="col-label">Kurze Fälle</div>
-
-      <div class="entry">
-        <span class="entry-year">2009</span>
-        <div class="entry-title">Die Bäckerei</div>
-        <p class="entry-text">Ich eröffnete eine Bäckerei. Ich konnte nicht backen. Das wusste ich. Ich hoffte, es wäre egal. Es war nicht egal. Nach sieben Monaten schloss ich. Ich schulde der Bank noch immer Geld. Aber ich bin Konditor geworden. Das habe ich von der Bäckerei gelernt: Man muss es selbst können.</p>
-      </div>
-
-      <div class="entry">
-        <span class="entry-year">2017</span>
-        <div class="entry-title">Vier Jahre Jura</div>
-        <p class="entry-text">Vier Jahre Jura. Ich bestand alle Prüfungen. Dann saß ich im ersten echten Büro und verstand: Das war nicht mein Leben. Ich verließ es. Heute mache ich Möbel aus altem Holz. Niemand fragt nach dem Abschluss.</p>
-      </div>
-
-      <div class="entry">
-        <span class="entry-year">2021</span>
-        <div class="entry-title">Achtzehn Absagen</div>
-        <p class="entry-text">Ich schrieb sechs Jahre an einem Roman. Achtzehn Verlage lehnten ab. Das Manuskript liegt in einer Schublade. Ich habe angefangen, ein zweites zu schreiben. Das ist besser. Vielleicht liegt das auch irgendwann in einer Schublade.</p>
-      </div>
-
-      <div class="entry">
-        <span class="entry-year">2012</span>
-        <div class="entry-title">Zu früh</div>
-        <p class="entry-text">Wir heirateten nach drei Monaten. Alle sagten, es sei zu früh. Wir sagten, alle anderen seien zu langsam. Nach zwei Jahren unterschrieben wir die Scheidung im selben Café, in dem wir uns kennengelernt hatten. Ich habe gelernt, dass Mut und Dummheit denselben Anfang haben. Nur ein anderes Ende.</p>
-      </div>
-
-      <div class="entry">
-        <span class="entry-year">2019</span>
-        <div class="entry-title">Niemand brauchte sie</div>
-        <p class="entry-text">Drei Freunde, ein Wohnzimmer, eine Idee. Wir bauten eine App, die niemand brauchte. Wir sagten uns, die Leute verstehen es noch nicht. Die Leute verstanden es. Sie brauchten es nicht. Das Geld war nach elf Monaten weg. Die Freundschaften auch. Einer von uns baut jetzt Software für Krankenhäuser. Etwas, das jemand braucht.</p>
-      </div>
+      <div id="kurze-faelle"></div>
     </div>
 
     <div class="divider"></div>
@@ -425,29 +470,18 @@
     <!-- COL 2: Diese Woche (featured) -->
     <div class="col featured">
       <div class="col-label">Diese Woche</div>
-
-      <div class="entry">
-        <span class="entry-year">1998 – 2003</span>
-        <div class="entry-title">Ich habe eine Firma gegen die Wand gefahren. Achtzehn Menschen verloren ihren Job.</div>
-        <p class="entry-text">Es war meine erste Firma. Ich war dreiundzwanzig. Ich dachte, Enthusiasmus ersetzt Erfahrung. Das tut er nicht.</p>
-
-        <div class="quote-block">
-          <p>"Ich habe jedem einzeln angerufen. Es hat zwei Tage gedauert. Das war das Richtige. Es hat nichts besser gemacht."</p>
-        </div>
-
-        <p class="entry-text">Heute führe ich eine andere Firma. Wir sind klein. Ich weiß, was jeder verdient. Ich weiß, was jeder braucht. Das habe ich damals nicht gewusst. Jetzt weiß ich es. Das war teuer.</p>
-      </div>
+      <div id="featured"></div>
     </div>
 
     <div class="divider"></div>
 
-    <!-- COL 3: Zahlen + Zitate -->
+    <!-- COL 3: Zahlen + Einreichen -->
     <div class="col">
       <div class="col-label">Zahlen</div>
 
       <div class="entry">
-        <span class="big-number">4.200</span>
-        <p class="entry-text">Geschichten eingereicht seit 2019.</p>
+        <span class="big-number" id="total-stories">—</span>
+        <p class="entry-text">Geschichten eingereicht.</p>
       </div>
 
       <div class="entry">
@@ -460,9 +494,16 @@
         <p class="entry-text">Regel: Kein Name. Keine Entschuldigung. Nur was passiert ist. Und was danach kam.</p>
       </div>
 
-      <div class="entry" style="margin-top:auto;">
+      <div class="submit-form" style="margin-top:auto;">
         <div class="col-label" style="margin-bottom:12px;">Einreichen</div>
-        <p class="entry-text" style="font-style:italic; color:var(--grey);">Jeden ersten Montag im Monat öffnet das Formular. Für vier Stunden. Dann schliesst es wieder.</p>
+        <form id="submit-form">
+          <input type="text" id="submit-year" placeholder="Jahr (z.B. 2019)" maxlength="20" required>
+          <input type="text" id="submit-title" placeholder="Titel (z.B. Die Bäckerei)" maxlength="100" required>
+          <textarea id="submit-text" placeholder="Deine Geschichte. Kurze Sätze. Was passiert ist. Und was danach kam." maxlength="500" required></textarea>
+          <div class="char-count" id="char-count">0 / 500</div>
+          <button type="submit" id="submit-btn">Geschichte einreichen</button>
+        </form>
+        <div id="submit-msg"></div>
       </div>
     </div>
 
@@ -471,35 +512,10 @@
     <!-- COL 4: Zitate + Historisch -->
     <div class="col">
       <div class="col-label">Zitate</div>
-
-      <div class="quote-entry">
-        <blockquote>„Ich habe nicht versagt. Ich habe 10.000 Wege gefunden, die nicht funktionieren."</blockquote>
-        <cite>— Thomas Edison</cite>
-      </div>
-
-      <div class="quote-entry">
-        <blockquote>„Erfolg ist die Fähigkeit, von einem Misserfolg zum nächsten zu gehen, ohne seine Begeisterung zu verlieren."</blockquote>
-        <cite>— Winston Churchill</cite>
-      </div>
-
-      <div class="quote-entry">
-        <blockquote>„Wer einen Fehler gemacht hat und ihn nicht korrigiert, begeht einen zweiten."</blockquote>
-        <cite>— Konfuzius</cite>
-      </div>
+      <div id="zitate"></div>
 
       <div class="col-label" style="margin-top:auto;">Historisch</div>
-
-      <div class="entry">
-        <span class="entry-year">1968</span>
-        <div class="entry-title italic">Die Klebstoff-Katastrophe</div>
-        <p class="entry-text">Spencer Silver wollte bei 3M einen superstarken Klebstoff entwickeln. Heraus kam das Gegenteil: ein Kleber, der kaum haftete. Sechs Jahre lang interessierte sich niemand dafür. Dann brauchte sein Kollege Art Fry ein Lesezeichen, das nicht rausfiel. Das Post-it war geboren.</p>
-      </div>
-
-      <div class="entry">
-        <span class="entry-year">1492</span>
-        <div class="entry-title italic">Der falsche Kontinent</div>
-        <p class="entry-text">Kolumbus rechnete den Erdumfang um ein Drittel zu klein. Deshalb glaubte er, Indien sei erreichbar. Jeder Kartograph in Europa wusste, dass er falsch lag. Niemand konnte ihn überzeugen. Er starb in dem Glauben, in Asien gewesen zu sein. Sein Fehler veränderte die Weltkarte.</p>
-      </div>
+      <div id="historisch"></div>
     </div>
 
   </main>
@@ -511,5 +527,131 @@
   </footer>
 
 </div>
+
+<script>
+(function() {
+  // Date display
+  var now = new Date();
+  var months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  document.getElementById('date-display').textContent = now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+  // Fetch edition
+  fetch('/api/edition')
+    .then(function(r) { return r.json(); })
+    .then(function(ed) {
+      renderStories(ed.stories || []);
+      renderFeatured(ed.featured);
+      renderQuotes(ed.quotes || []);
+      renderHistorical(ed.historical || []);
+      if (ed.total_stories) {
+        document.getElementById('total-stories').textContent = ed.total_stories.toLocaleString('de-DE');
+      }
+    })
+    .catch(function() {});
+
+  function renderStories(stories) {
+    var el = document.getElementById('kurze-faelle');
+    el.innerHTML = stories.map(function(s) {
+      return '<div class="entry">' +
+        '<span class="entry-year">' + esc(s.year) + '</span>' +
+        '<div class="entry-title">' + esc(s.title) + '</div>' +
+        '<p class="entry-text">' + esc(s.text) + '</p>' +
+        '</div>';
+    }).join('');
+  }
+
+  function renderFeatured(f) {
+    if (!f) return;
+    var el = document.getElementById('featured');
+    var html = '<div class="entry">' +
+      '<span class="entry-year">' + esc(f.year_range) + '</span>' +
+      '<div class="entry-title">' + esc(f.title) + '</div>' +
+      '<p class="entry-text">' + esc(f.intro) + '</p>';
+    if (f.quote) {
+      html += '<div class="quote-block"><p>\u201E' + esc(f.quote) + '\u201C</p></div>';
+    }
+    if (f.outro) {
+      html += '<p class="entry-text">' + esc(f.outro) + '</p>';
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  function renderQuotes(quotes) {
+    var el = document.getElementById('zitate');
+    el.innerHTML = quotes.map(function(q) {
+      return '<div class="quote-entry">' +
+        '<blockquote>\u201E' + esc(q.text) + '\u201C</blockquote>' +
+        '<cite>\u2014 ' + esc(q.attribution) + '</cite>' +
+        '</div>';
+    }).join('');
+  }
+
+  function renderHistorical(items) {
+    var el = document.getElementById('historisch');
+    el.innerHTML = items.map(function(h) {
+      return '<div class="entry">' +
+        '<span class="entry-year">' + esc(h.year) + '</span>' +
+        '<div class="entry-title italic">' + esc(h.title) + '</div>' +
+        '<p class="entry-text">' + esc(h.text) + '</p>' +
+        '</div>';
+    }).join('');
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // Submit form
+  var textarea = document.getElementById('submit-text');
+  var charCount = document.getElementById('char-count');
+  textarea.addEventListener('input', function() {
+    var len = textarea.value.length;
+    charCount.textContent = len + ' / 500';
+    charCount.className = 'char-count' + (len > 500 ? ' over' : '');
+  });
+
+  document.getElementById('submit-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('submit-btn');
+    var msg = document.getElementById('submit-msg');
+    btn.disabled = true;
+    msg.textContent = '';
+
+    var data = {
+      year: document.getElementById('submit-year').value.trim(),
+      title: document.getElementById('submit-title').value.trim(),
+      text: textarea.value.trim()
+    };
+
+    fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(r) { return r.json().then(function(j) { return { ok: r.ok, data: j }; }); })
+    .then(function(res) {
+      if (res.ok) {
+        msg.className = 'submit-msg success';
+        msg.textContent = res.data.message;
+        document.getElementById('submit-form').reset();
+        charCount.textContent = '0 / 500';
+      } else {
+        msg.className = 'submit-msg error';
+        msg.textContent = res.data.error || 'Fehler beim Einreichen.';
+        btn.disabled = false;
+      }
+    })
+    .catch(function() {
+      msg.className = 'submit-msg error';
+      msg.textContent = 'Verbindungsfehler. Bitte später nochmal versuchen.';
+      btn.disabled = false;
+    });
+  });
+})();
+</script>
 </body>
 </html>
