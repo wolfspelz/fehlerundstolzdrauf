@@ -35,7 +35,10 @@ curl -s -X PUT -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: applica
 curl -s -X PUT -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: application/json" -d '{"status":"hidden"}' https://fehlerundstolzdrauf.de/admin/submissions/ID
 ```
 
-Zeige jede unmoderierte Einreichung dem Benutzer und frage: Freigeben oder Verbergen? Führe dann den entsprechenden curl-Befehl aus.
+Zeige jede unmoderierte Einreichung dem Benutzer mit den Optionen:
+1. Freigeben
+2. Verbergen
+3. Löschen
 
 ### 2. Zitate generieren
 
