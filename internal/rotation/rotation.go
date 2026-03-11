@@ -45,6 +45,7 @@ type Edition struct {
 	Date         string       `json:"date"`
 	Stories      []Story      `json:"stories"`
 	New          []NewEntry   `json:"new"`
+	Older        []NewEntry   `json:"older"`
 	Quotes       []Quote      `json:"quotes"`
 	Historical   []Historical `json:"historical"`
 	TotalStories int          `json:"total_stories"`
@@ -131,6 +132,23 @@ func generateEdition(date string) (*Edition, error) {
 		return nil, fmt.Errorf("pick new: %w", err)
 	}
 
+	// Collect IDs from new entries to also exclude from older
+	for _, n := range newEntries {
+		switch n.Type {
+		case "story":
+			excludeStoryIDs[n.ID] = true
+		case "quote":
+			excludeQuoteIDs[n.ID] = true
+		case "historical":
+			excludeHistoricalIDs[n.ID] = true
+		}
+	}
+
+	olderEntries, err := pickOlder(rng, excludeStoryIDs, excludeQuoteIDs, excludeHistoricalIDs, 4-len(newEntries))
+	if err != nil {
+		return nil, fmt.Errorf("pick older: %w", err)
+	}
+
 	var totalStories int
 	db.DB.QueryRow("SELECT COUNT(*) FROM stories WHERE status IN ('unmoderated','approved')").Scan(&totalStories)
 
@@ -149,6 +167,7 @@ func generateEdition(date string) (*Edition, error) {
 		Date:         date,
 		Stories:      stories,
 		New:          newEntries,
+		Older:        olderEntries,
 		Quotes:       quotes,
 		Historical:   historical,
 		TotalStories: totalStories,
@@ -210,6 +229,72 @@ func pickNew(rng *rand.Rand, excludeStoryIDs, excludeQuoteIDs, excludeHistorical
 	}
 
 	// Shuffle and limit
+	rng.Shuffle(len(entries), func(i, j int) { entries[i], entries[j] = entries[j], entries[i] })
+	if len(entries) > max {
+		entries = entries[:max]
+	}
+
+	return entries, nil
+}
+
+func pickOlder(rng *rand.Rand, excludeStoryIDs, excludeQuoteIDs, excludeHistoricalIDs map[int]bool, max int) ([]NewEntry, error) {
+	if max <= 0 {
+		return nil, nil
+	}
+
+	var entries []NewEntry
+
+	// Older stories (> 1 month or NULL created_at)
+	rows, err := db.DB.Query("SELECT id, year, title, text FROM stories WHERE status IN ('unmoderated','approved') AND (created_at < date('now', '-1 month') OR created_at IS NULL) ORDER BY shown_count ASC, id ASC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int
+		var year, title, text string
+		if err := rows.Scan(&id, &year, &title, &text); err != nil {
+			return nil, err
+		}
+		if !excludeStoryIDs[id] {
+			entries = append(entries, NewEntry{Type: "story", ID: id, Year: year, Title: title, Text: text})
+		}
+	}
+
+	// Older quotes
+	rows2, err := db.DB.Query("SELECT id, text, attribution FROM quotes WHERE created_at < date('now', '-1 month') OR created_at IS NULL ORDER BY shown_count ASC, id ASC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows2.Close()
+	for rows2.Next() {
+		var id int
+		var text, attribution string
+		if err := rows2.Scan(&id, &text, &attribution); err != nil {
+			return nil, err
+		}
+		if !excludeQuoteIDs[id] {
+			entries = append(entries, NewEntry{Type: "quote", ID: id, Text: text, Attribution: attribution})
+		}
+	}
+
+	// Older historical
+	rows3, err := db.DB.Query("SELECT id, year, title, text FROM historical WHERE created_at < date('now', '-1 month') OR created_at IS NULL ORDER BY shown_count ASC, id ASC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows3.Close()
+	for rows3.Next() {
+		var id int
+		var year, title, text string
+		if err := rows3.Scan(&id, &year, &title, &text); err != nil {
+			return nil, err
+		}
+		if !excludeHistoricalIDs[id] {
+			entries = append(entries, NewEntry{Type: "historical", ID: id, Year: year, Title: title, Text: text})
+		}
+	}
+
 	rng.Shuffle(len(entries), func(i, j int) { entries[i], entries[j] = entries[j], entries[i] })
 	if len(entries) > max {
 		entries = entries[:max]

@@ -512,7 +512,7 @@
     .then(function(r) { return r.json(); })
     .then(function(ed) {
       renderStories(ed.stories || []);
-      renderNew(ed.new || []);
+      renderNew(ed.new || [], ed.older || []);
       renderQuotes(ed.quotes || []);
       renderHistorical(ed.historical || []);
       if (ed.total_stories) {
@@ -532,36 +532,45 @@
     }).join('');
   }
 
-  function renderNew(items) {
-    var el = document.getElementById('neu');
-    if (!items.length) {
-      el.innerHTML = '<p class="entry-text" style="color:var(--grey);font-style:italic;">Keine neuen Einträge diesen Monat.</p>';
-      return;
+  function renderNewEntry(item) {
+    if (item.type === 'story') {
+      return '<div class="entry">' +
+        '<span class="new-type-label">Geschichte</span>' +
+        '<span class="entry-year">' + esc(item.year) + '</span>' +
+        '<div class="entry-title">' + esc(item.title) + '</div>' +
+        '<p class="entry-text">' + esc(item.text) + '</p>' +
+        '</div>';
+    } else if (item.type === 'quote') {
+      return '<div class="quote-entry">' +
+        '<span class="new-type-label">Zitat</span>' +
+        '<blockquote>\u201E' + esc(item.text) + '\u201C</blockquote>' +
+        '<cite>\u2014 ' + esc(item.attribution) + '</cite>' +
+        '</div>';
+    } else if (item.type === 'historical') {
+      return '<div class="entry">' +
+        '<span class="new-type-label">Historisch</span>' +
+        '<span class="entry-year">' + esc(item.year) + '</span>' +
+        '<div class="entry-title italic">' + esc(item.title) + '</div>' +
+        '<p class="entry-text">' + esc(item.text) + '</p>' +
+        '</div>';
     }
-    el.innerHTML = items.map(function(item) {
-      if (item.type === 'story') {
-        return '<div class="entry">' +
-          '<span class="new-type-label">Geschichte</span>' +
-          '<span class="entry-year">' + esc(item.year) + '</span>' +
-          '<div class="entry-title">' + esc(item.title) + '</div>' +
-          '<p class="entry-text">' + esc(item.text) + '</p>' +
-          '</div>';
-      } else if (item.type === 'quote') {
-        return '<div class="quote-entry">' +
-          '<span class="new-type-label">Zitat</span>' +
-          '<blockquote>\u201E' + esc(item.text) + '\u201C</blockquote>' +
-          '<cite>\u2014 ' + esc(item.attribution) + '</cite>' +
-          '</div>';
-      } else if (item.type === 'historical') {
-        return '<div class="entry">' +
-          '<span class="new-type-label">Historisch</span>' +
-          '<span class="entry-year">' + esc(item.year) + '</span>' +
-          '<div class="entry-title italic">' + esc(item.title) + '</div>' +
-          '<p class="entry-text">' + esc(item.text) + '</p>' +
-          '</div>';
-      }
-      return '';
-    }).join('');
+    return '';
+  }
+
+  function renderNew(items, older) {
+    var el = document.getElementById('neu');
+    var html = '';
+    if (items.length) {
+      html += items.map(renderNewEntry).join('');
+    }
+    if (older.length) {
+      html += '<div class="col-label" style="margin-top:24px;">Vorher</div>';
+      html += older.map(renderNewEntry).join('');
+    }
+    if (!html) {
+      html = '<p class="entry-text" style="color:var(--grey);font-style:italic;">Keine Einträge verfügbar.</p>';
+    }
+    el.innerHTML = html;
   }
 
   function renderQuotes(quotes) {

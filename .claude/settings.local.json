@@ -48,7 +48,10 @@
       "Bash(sleep 3 && curl -s -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/backup | python3 -m json.tool)",
       "Bash(curl -v -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/backup 2>&1)",
       "Bash(curl -s -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/backup | python3 -m json.tool)",
-      "Bash(pkill -f \"./server\" 2>/dev/null; echo \"done\")"
+      "Bash(pkill -f \"./server\" 2>/dev/null; echo \"done\")",
+      "Bash(curl -s https://fehlerundstolzdrauf.de/api/edition | python3 -m json.tool 2>&1 | head -20)",
+      "Bash(curl -s https://fehlerundstolzdrauf.de/api/edition | python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('has featured:', 'featured' in d\\); print\\('has new:', 'new' in d\\); print\\('new value:', d.get\\('new', 'MISSING'\\)\\)\")",
+      "Bash(pkill -f \"./server\" 2>/dev/null; echo \"stopped\")"
     ]
   }
 }
