@@ -141,8 +141,11 @@ Wöchentliche Pflege via Claude Code:
 
 ## Workflow für Änderungen
 
-1. Code bearbeiten
+1. Entwickeln und testen auf `main`
 2. Lokal prüfen: `docker build -t fsd . && docker run -p 8080:80 -e ADMIN_TOKEN=test -v ./data:/data fsd`
-3. `git add && git commit && git push`
-4. CI/CD deployt automatisch auf Server
-5. Live prüfen: https://fehlerundstolzdrauf.de
+3. Fragen ob committen und pushen (auf `main`)
+4. Fragen ob deployen. Falls ja:
+   - `git checkout deployment && git merge main && git push origin deployment`
+   - `git checkout main`
+5. CI/CD deployt automatisch auf Server
+6. Live prüfen: https://fehlerundstolzdrauf.de
