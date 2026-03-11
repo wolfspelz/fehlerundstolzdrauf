@@ -107,7 +107,7 @@ func HandleSubmit(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Danke für deine Geschichte. Sie ist ab sofort sichtbar."})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Danke für deine Geschichte. Sie erscheint in einer der nächsten Ausgaben."})
 }
 
 func stripHTML(s string) string {
