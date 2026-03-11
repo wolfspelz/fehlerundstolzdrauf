@@ -10,6 +10,6 @@ FROM alpine:latest
 RUN apk add --no-cache ca-certificates
 COPY --from=build /app/server /server
 COPY --from=build /app/public /public
-COPY --from=build /app/data /data
+COPY --from=build /app/internal/db/seed.sql /seed.sql
 EXPOSE 80
 CMD ["/server"]

@@ -93,7 +93,7 @@ internal/
   api/admin.go               -- Admin-Endpunkte mit Token-Auth
   rotation/rotation.go       -- Tages-Ausgabe Auswahl-Logik
 public/index.html            -- Frontend mit JS fetch + Formular
-data/seed.sql                -- Initiale Daten
+internal/db/seed.sql         -- Initiale Daten
 Dockerfile                   -- Multi-Stage Go Build
 .github/workflows/cicd.yml   -- CI/CD Pipeline
 .claude/skills/redaktion/SKILL.md  -- Redaktions-Skill

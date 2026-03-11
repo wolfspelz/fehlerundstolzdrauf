@@ -79,11 +79,15 @@ func Init(dbPath string) error {
 	var count int
 	DB.QueryRow("SELECT COUNT(*) FROM stories").Scan(&count)
 	if count == 0 {
-		if err := runSeedFile("/data/seed.sql"); err != nil {
-			// Try relative path for local dev
-			if err2 := runSeedFile("data/seed.sql"); err2 != nil {
-				return fmt.Errorf("seed db: %w (also tried relative: %v)", err, err2)
+		seedPaths := []string{"/seed.sql", "internal/db/seed.sql"}
+		var seedErr error
+		for _, p := range seedPaths {
+			if seedErr = runSeedFile(p); seedErr == nil {
+				break
 			}
+		}
+		if seedErr != nil {
+			return fmt.Errorf("seed db: %w", seedErr)
 		}
 	}
 
