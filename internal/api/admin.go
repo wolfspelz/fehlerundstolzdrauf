@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -85,6 +86,7 @@ func HandleUpdateSubmission(w http.ResponseWriter, r *http.Request) {
 
 	result, err := db.DB.Exec("UPDATE stories SET status = ? WHERE id = ?", req.Status, id)
 	if err != nil {
+		log.Printf("UpdateSubmission error: %v", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}

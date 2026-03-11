@@ -23,7 +23,15 @@
       "Bash(curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" https://fehlerundstolzdrauf.de/admin/stats)",
       "Bash(curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" \"https://fehlerundstolzdrauf.de/admin/submissions?status=unmoderated\")",
       "Bash(curl -s -X PUT -H \"Authorization: Bearer $ADMIN_TOKEN\" -H \"Content-Type: application/json\" -d '{\"status\":\"hidden\"}' https://fehlerundstolzdrauf.de/admin/submissions/16)",
-      "Bash(curl -s -X PUT -H \"Authorization: Bearer $ADMIN_TOKEN\" -H \"Content-Type: application/json\" -d '{\"status\":\"hidden\"}' https://fehlerundstolzdrauf.de/admin/submissions/17)"
+      "Bash(curl -s -X PUT -H \"Authorization: Bearer $ADMIN_TOKEN\" -H \"Content-Type: application/json\" -d '{\"status\":\"hidden\"}' https://fehlerundstolzdrauf.de/admin/submissions/17)",
+      "Bash(curl -s -H \"Authorization: Bearer test\" http://localhost:8080/admin/stats)",
+      "Bash(curl -s -H \"Authorization: Bearer test\" \"http://localhost:8080/admin/submissions?status=unmoderated\")",
+      "Bash(curl -s -X PUT -H \"Authorization: Bearer test\" -H \"Content-Type: application/json\" -d '{\"status\":\"approved\"}' http://localhost:8080/admin/submissions/16)",
+      "Bash(curl -sv -X PUT -H \"Authorization: Bearer test\" -H \"Content-Type: application/json\" -d '{\"status\":\"approved\"}' http://localhost:8080/admin/submissions/16 2>&1)",
+      "Bash(pkill -f \"go run.*cmd/server\" 2>/dev/null; pkill -f \"go-build.*server\" 2>/dev/null; sleep 2 && ls -la /home/hwolf/dev/github-fehlerundstolzdrauf/data/fehlerundstolzdrauf.db)",
+      "Bash(sleep 8 && curl -s -X PUT -H \"Authorization: Bearer test\" -H \"Content-Type: application/json\" -d '{\"status\":\"approved\"}' http://localhost:8080/admin/submissions/16)",
+      "Bash(curl -s -X PUT -H \"Authorization: Bearer test\" -H \"Content-Type: application/json\" -d '{\"status\":\"approved\"}' http://localhost:8080/admin/submissions/16 2>&1)",
+      "Bash(sleep 12 && curl -s -X PUT -H \"Authorization: Bearer test\" -H \"Content-Type: application/json\" -d '{\"status\":\"approved\"}' http://localhost:8080/admin/submissions/16)"
     ]
   }
 }

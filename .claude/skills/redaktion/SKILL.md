@@ -94,16 +94,16 @@ Cache löschen und neuen Seed erzwingen, damit `/api/edition` sofort neue Inhalt
 curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/reset-edition
 ```
 
-### 8. Beenden
-
-Redaktion beenden. Keine weitere Aktion.
-
-### 9. Löschen
+### 8. Löschen
 
 ```bash
 # Typ: stories, featured, quotes, historical
 curl -s -X DELETE -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/TYP/ID
 ```
+
+### 9. Beenden
+
+Redaktion beenden. Keine weitere Aktion.
 
 ## Ablauf
 

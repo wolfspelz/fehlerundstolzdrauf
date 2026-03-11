@@ -142,7 +142,7 @@ Wöchentliche Pflege via Claude Code:
 ## Workflow für Änderungen
 
 1. Entwickeln und testen auf `main`
-2. Lokal prüfen: `docker build -t fsd . && docker run -p 8080:80 -e ADMIN_TOKEN=test -v ./data:/data fsd`
+2. Lokal prüfen: `docker build -t fsd . && docker run --rm -p 8080:80 -e ADMIN_TOKEN=test --user $(id -u):$(id -g) -v ./data:/data fsd`
 3. Fragen ob committen und pushen (auf `main`)
 4. Fragen ob deployen. Falls ja:
    - `git checkout deployment && git merge main && git push origin deployment`
