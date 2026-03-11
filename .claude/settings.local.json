@@ -41,7 +41,14 @@
       "Bash(curl -s -H \"Authorization: Bearer test\" http://localhost:5000/admin/stats | python3 -m json.tool)",
       "Bash(curl -s -H \"Authorization: Bearer test\" \"http://localhost:5000/admin/submissions?status=unmoderated\" | python3 -m json.tool)",
       "Bash(curl -s -X PUT -H \"Authorization: Bearer test\" -H \"Content-Type: application/json\" -d '{\"status\":\"approved\"}' http://localhost:5000/admin/submissions/16 | python3 -m json.tool)",
-      "Bash(curl -s -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/reset-edition | python3 -m json.tool)"
+      "Bash(curl -s -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/reset-edition | python3 -m json.tool)",
+      "Bash(pkill -f \"./server\" 2>/dev/null; sleep 1; DB_PATH=data/fehlerundstolzdrauf.db ADMIN_TOKEN=test PORT=5000 ./server)",
+      "Bash(sleep 2 && curl -s -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/backup | python3 -m json.tool)",
+      "Bash(curl -s -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/backup)",
+      "Bash(sleep 3 && curl -s -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/backup | python3 -m json.tool)",
+      "Bash(curl -v -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/backup 2>&1)",
+      "Bash(curl -s -X POST -H \"Authorization: Bearer test\" http://localhost:5000/admin/backup | python3 -m json.tool)",
+      "Bash(pkill -f \"./server\" 2>/dev/null; echo \"done\")"
     ]
   }
 }

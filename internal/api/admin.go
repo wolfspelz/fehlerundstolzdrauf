@@ -212,6 +212,16 @@ func HandleStats(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(stats)
 }
 
+func HandleBackup(w http.ResponseWriter, r *http.Request) {
+	result, err := db.Backup()
+	if err != nil {
+		http.Error(w, "Backup failed: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
 func HandleDelete(w http.ResponseWriter, r *http.Request) {
 	// Path: /admin/{type}/{id}
 	path := strings.TrimPrefix(r.URL.Path, "/admin/")

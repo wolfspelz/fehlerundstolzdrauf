@@ -62,6 +62,7 @@ Header: `Authorization: Bearer <ADMIN_TOKEN>`
 | POST | `/admin/historical` | Neuer Historisch-Eintrag |
 | GET | `/admin/stats` | Übersicht |
 | POST | `/admin/reset-edition` | Edition-Cache löschen + neuen Seed erzwingen |
+| POST | `/admin/backup` | Manuelles Backup aller Daten als SQL-Dump |
 | DELETE | `/admin/:type/:id` | Löschen |
 
 ### SQLite
@@ -69,6 +70,8 @@ Header: `Authorization: Bearer <ADMIN_TOKEN>`
 - Datenbank: `/data/fehlerundstolzdrauf.db` (Docker Volume)
 - Tabellen: `stories`, `quotes`, `historical`, `edition_cache`
 - Seed-Daten in `data/seed.sql`
+- Migrationen in `db.go` `migrate()`: Nur ausführen wenn Schema sich tatsächlich geändert hat (z.B. per `PRAGMA table_info()` prüfen ob Spalte/Tabelle schon existiert). Keine unnötigen ALTER/DROP bei jedem Start.
+- Vor jeder DB-Migration: Alle Daten als SQL-Dump exportieren (INSERT-Statements) in eine Datei mit Datum-Uhrzeit im Namen (z.B. `data/backup_2026-03-11_223045.sql`), damit auch bei mehrfachem schnellen Neustart kein Backup überschrieben wird.
 
 ## Design
 

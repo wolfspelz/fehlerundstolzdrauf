@@ -84,14 +84,22 @@ Cache löschen und neuen Seed erzwingen, damit `/api/edition` sofort neue Inhalt
 curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/reset-edition
 ```
 
-### 7. Löschen
+### 7. Backup
+
+Manuelles Backup aller Daten als SQL-Dump. Zeigt Statistik und Dateigröße.
+
+```bash
+curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/backup | jq .
+```
+
+### 8. Löschen
 
 ```bash
 # Typ: stories, quotes, historical
 curl -s -X DELETE -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/TYP/ID
 ```
 
-### 8. Beenden
+### 9. Beenden
 
 Redaktion beenden. Keine weitere Aktion.
 
