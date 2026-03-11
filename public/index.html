@@ -59,7 +59,7 @@
   /* ── MASTHEAD ── */
   .dateline {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.68rem;
+    font-size: 0.8rem;
     letter-spacing: 0.4em;
     color: var(--grey);
     text-transform: uppercase;
@@ -96,7 +96,7 @@
 
   .issue {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.55rem;
+    font-size: 0.8rem;
     letter-spacing: 0.35em;
     color: var(--grey);
     text-transform: uppercase;
@@ -118,7 +118,7 @@
 
   .subtitle {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.62rem;
+    font-size: 0.8rem;
     color: var(--grey);
     line-height: 1.7;
     font-style: italic;
@@ -150,7 +150,7 @@
 
   .col-label {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.3em;
     text-transform: uppercase;
@@ -185,7 +185,7 @@
 
   .entry-year {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.58rem;
+    font-size: 0.8rem;
     letter-spacing: 0.15em;
     color: var(--grey);
     display: block;
@@ -204,50 +204,22 @@
 
   .entry-text {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 0.76rem;
+    font-size: 0.8rem;
     line-height: 1.7;
     color: var(--ink);
     text-align: justify;
     hyphens: auto;
   }
 
-  /* Drop cap for first entry in featured */
-  .featured .entry-text:first-of-type::first-letter {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 3.2rem;
-    font-weight: 700;
-    float: left;
-    line-height: 0.8;
-    margin-right: 6px;
-    margin-top: 4px;
+  /* ── NEU (col 2) ── */
+  .neu-col .new-type-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
     color: var(--red);
-  }
-
-  /* ── FEATURED (col 2) ── */
-  .featured .entry-title {
-    font-size: 1.35rem;
-    font-style: italic;
-    margin-bottom: 14px;
-    line-height: 1.2;
-  }
-
-  .featured .entry-text {
-    font-size: 0.82rem;
-    line-height: 1.75;
-  }
-
-  .quote-block {
-    margin: 18px 0;
-    padding: 14px 0 14px 14px;
-    border-left: 3px solid var(--red);
-  }
-
-  .quote-block p {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-style: italic;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: var(--red);
+    display: block;
+    margin-bottom: 4px;
   }
 
   /* ── QUOTES ── */
@@ -272,7 +244,7 @@
 
   .quote-entry cite {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.56rem;
+    font-size: 0.8rem;
     color: var(--grey);
     font-style: normal;
     letter-spacing: 0.08em;
@@ -298,7 +270,7 @@
   .submit-form textarea {
     width: 100%;
     font-family: 'Courier Prime', monospace;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     background: transparent;
     border: 1px solid var(--line);
     color: var(--black);
@@ -320,7 +292,7 @@
 
   .submit-form .char-count {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.55rem;
+    font-size: 0.8rem;
     color: var(--grey);
     text-align: right;
     margin-top: -6px;
@@ -333,7 +305,7 @@
 
   .submit-form button {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.68rem;
+    font-size: 0.8rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     background: var(--black);
@@ -355,7 +327,7 @@
 
   .submit-msg {
     font-family: 'Courier Prime', monospace;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     margin-top: 8px;
     line-height: 1.4;
   }
@@ -433,7 +405,7 @@
       padding: 12px 20px;
     }
     .footer-left, .footer-right { text-align: center; }
-    .dateline { padding: 10px 20px 6px; font-size: 0.55rem; }
+    .dateline { padding: 10px 20px 6px; font-size: 0.8rem; }
   }
 
   @media print {
@@ -461,16 +433,16 @@
 
     <!-- COL 1: Kurze Fälle -->
     <div class="col">
-      <div class="col-label">Kurze Fälle</div>
+      <div class="col-label">Geschichten</div>
       <div id="kurze-faelle"></div>
     </div>
 
     <div class="divider"></div>
 
-    <!-- COL 2: Diese Woche (featured) -->
-    <div class="col featured">
-      <div class="col-label">Diese Woche</div>
-      <div id="featured"></div>
+    <!-- COL 2: Aktuell -->
+    <div class="col neu-col">
+      <div class="col-label">Aktuell</div>
+      <div id="neu"></div>
     </div>
 
     <div class="divider"></div>
@@ -540,7 +512,7 @@
     .then(function(r) { return r.json(); })
     .then(function(ed) {
       renderStories(ed.stories || []);
-      renderFeatured(ed.featured);
+      renderNew(ed.new || []);
       renderQuotes(ed.quotes || []);
       renderHistorical(ed.historical || []);
       if (ed.total_stories) {
@@ -560,21 +532,36 @@
     }).join('');
   }
 
-  function renderFeatured(f) {
-    if (!f) return;
-    var el = document.getElementById('featured');
-    var html = '<div class="entry">' +
-      '<span class="entry-year">' + esc(f.year_range) + '</span>' +
-      '<div class="entry-title">' + esc(f.title) + '</div>' +
-      '<p class="entry-text">' + esc(f.intro) + '</p>';
-    if (f.quote) {
-      html += '<div class="quote-block"><p>\u201E' + esc(f.quote) + '\u201C</p></div>';
+  function renderNew(items) {
+    var el = document.getElementById('neu');
+    if (!items.length) {
+      el.innerHTML = '<p class="entry-text" style="color:var(--grey);font-style:italic;">Keine neuen Einträge diesen Monat.</p>';
+      return;
     }
-    if (f.outro) {
-      html += '<p class="entry-text">' + esc(f.outro) + '</p>';
-    }
-    html += '</div>';
-    el.innerHTML = html;
+    el.innerHTML = items.map(function(item) {
+      if (item.type === 'story') {
+        return '<div class="entry">' +
+          '<span class="new-type-label">Geschichte</span>' +
+          '<span class="entry-year">' + esc(item.year) + '</span>' +
+          '<div class="entry-title">' + esc(item.title) + '</div>' +
+          '<p class="entry-text">' + esc(item.text) + '</p>' +
+          '</div>';
+      } else if (item.type === 'quote') {
+        return '<div class="quote-entry">' +
+          '<span class="new-type-label">Zitat</span>' +
+          '<blockquote>\u201E' + esc(item.text) + '\u201C</blockquote>' +
+          '<cite>\u2014 ' + esc(item.attribution) + '</cite>' +
+          '</div>';
+      } else if (item.type === 'historical') {
+        return '<div class="entry">' +
+          '<span class="new-type-label">Historisch</span>' +
+          '<span class="entry-year">' + esc(item.year) + '</span>' +
+          '<div class="entry-title italic">' + esc(item.title) + '</div>' +
+          '<p class="entry-text">' + esc(item.text) + '</p>' +
+          '</div>';
+      }
+      return '';
+    }).join('');
   }
 
   function renderQuotes(quotes) {

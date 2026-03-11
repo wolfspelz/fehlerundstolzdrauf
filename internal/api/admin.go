@@ -129,34 +129,6 @@ func HandleCreateStory(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "status": "ok"})
 }
 
-func HandleCreateFeatured(w http.ResponseWriter, r *http.Request) {
-	var req struct {
-		YearRange string `json:"year_range"`
-		Title     string `json:"title"`
-		Intro     string `json:"intro"`
-		Quote     string `json:"quote"`
-		Outro     string `json:"outro"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request", http.StatusBadRequest)
-		return
-	}
-
-	result, err := db.DB.Exec("INSERT INTO featured (year_range, title, intro, quote, outro) VALUES (?, ?, ?, ?, ?)",
-		req.YearRange, req.Title, req.Intro, req.Quote, req.Outro)
-	if err != nil {
-		http.Error(w, "Database error", http.StatusInternalServerError)
-		return
-	}
-
-	id, _ := result.LastInsertId()
-	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "status": "ok"})
-}
-
 func HandleCreateQuote(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Text        string `json:"text"`
@@ -225,8 +197,7 @@ func HandleStats(w http.ResponseWriter, r *http.Request) {
 	db.DB.QueryRow("SELECT COUNT(*) FROM stories WHERE status='unmoderated'").Scan(&unmoderated)
 	db.DB.QueryRow("SELECT COUNT(*) FROM stories WHERE status='hidden'").Scan(&hidden)
 
-	var featuredCount, quotesCount, historicalCount int
-	db.DB.QueryRow("SELECT COUNT(*) FROM featured").Scan(&featuredCount)
+	var quotesCount, historicalCount int
 	db.DB.QueryRow("SELECT COUNT(*) FROM quotes").Scan(&quotesCount)
 	db.DB.QueryRow("SELECT COUNT(*) FROM historical").Scan(&historicalCount)
 
@@ -234,7 +205,6 @@ func HandleStats(w http.ResponseWriter, r *http.Request) {
 	stats["stories_approved"] = approved
 	stats["stories_unmoderated"] = unmoderated
 	stats["stories_hidden"] = hidden
-	stats["featured"] = featuredCount
 	stats["quotes"] = quotesCount
 	stats["historical"] = historicalCount
 
@@ -259,7 +229,7 @@ func HandleDelete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Whitelist tables
-	validTables := map[string]bool{"stories": true, "featured": true, "quotes": true, "historical": true}
+	validTables := map[string]bool{"stories": true, "quotes": true, "historical": true}
 	if !validTables[table] {
 		http.Error(w, "Invalid type", http.StatusBadRequest)
 		return

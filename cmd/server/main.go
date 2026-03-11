@@ -53,13 +53,6 @@ func main() {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
-	http.HandleFunc("/admin/featured", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
-			api.HandleCreateFeatured(w, r)
-		} else {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		}
-	}))
 	http.HandleFunc("/admin/quotes", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			api.HandleCreateQuote(w, r)

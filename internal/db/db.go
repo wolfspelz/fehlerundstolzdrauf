@@ -22,21 +22,11 @@ CREATE TABLE IF NOT EXISTS stories (
     shown_count INTEGER DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS featured (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    year_range TEXT NOT NULL,
-    title TEXT NOT NULL,
-    intro TEXT NOT NULL,
-    quote TEXT,
-    outro TEXT,
-    created_at TEXT DEFAULT (datetime('now')),
-    shown_count INTEGER DEFAULT 0
-);
-
 CREATE TABLE IF NOT EXISTS quotes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     text TEXT NOT NULL,
     attribution TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
     shown_count INTEGER DEFAULT 0
 );
 
@@ -45,6 +35,7 @@ CREATE TABLE IF NOT EXISTS historical (
     year TEXT NOT NULL,
     title TEXT NOT NULL,
     text TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
     shown_count INTEGER DEFAULT 0
 );
 

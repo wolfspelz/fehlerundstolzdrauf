@@ -70,23 +70,13 @@ curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: applic
   https://fehlerundstolzdrauf.de/admin/stories
 ```
 
-### 5. Featured Story schreiben
-
-Entwickle eine längere Featured Story mit Intro, Zitat-Block und Outro.
-
-```bash
-curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: application/json" \
-  -d '{"year_range":"ZEITRAUM","title":"TITEL","intro":"INTRO","quote":"ZITAT","outro":"OUTRO"}' \
-  https://fehlerundstolzdrauf.de/admin/featured
-```
-
-### 6. Statistik
+### 5. Statistik
 
 ```bash
 curl -s -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/stats | jq .
 ```
 
-### 7. Edition zurücksetzen
+### 6. Edition zurücksetzen
 
 Cache löschen und neuen Seed erzwingen, damit `/api/edition` sofort neue Inhalte liefert (ohne bis morgen zu warten).
 
@@ -94,14 +84,14 @@ Cache löschen und neuen Seed erzwingen, damit `/api/edition` sofort neue Inhalt
 curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/reset-edition
 ```
 
-### 8. Löschen
+### 7. Löschen
 
 ```bash
-# Typ: stories, featured, quotes, historical
+# Typ: stories, quotes, historical
 curl -s -X DELETE -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/TYP/ID
 ```
 
-### 9. Beenden
+### 8. Beenden
 
 Redaktion beenden. Keine weitere Aktion.
 

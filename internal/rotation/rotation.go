@@ -19,15 +19,6 @@ type Story struct {
 	Text  string `json:"text"`
 }
 
-type Featured struct {
-	ID        int    `json:"id"`
-	YearRange string `json:"year_range"`
-	Title     string `json:"title"`
-	Intro     string `json:"intro"`
-	Quote     string `json:"quote,omitempty"`
-	Outro     string `json:"outro,omitempty"`
-}
-
 type Quote struct {
 	ID          int    `json:"id"`
 	Text        string `json:"text"`
@@ -41,13 +32,22 @@ type Historical struct {
 	Text  string `json:"text"`
 }
 
+type NewEntry struct {
+	Type        string `json:"type"`
+	ID          int    `json:"id"`
+	Year        string `json:"year,omitempty"`
+	Title       string `json:"title,omitempty"`
+	Text        string `json:"text,omitempty"`
+	Attribution string `json:"attribution,omitempty"`
+}
+
 type Edition struct {
-	Date        string       `json:"date"`
-	Stories     []Story      `json:"stories"`
-	Featured    *Featured    `json:"featured"`
-	Quotes      []Quote      `json:"quotes"`
-	Historical  []Historical `json:"historical"`
-	TotalStories int         `json:"total_stories"`
+	Date         string       `json:"date"`
+	Stories      []Story      `json:"stories"`
+	New          []NewEntry   `json:"new"`
+	Quotes       []Quote      `json:"quotes"`
+	Historical   []Historical `json:"historical"`
+	TotalStories int          `json:"total_stories"`
 }
 
 func dateToSeed(date string) int64 {
@@ -102,11 +102,6 @@ func generateEdition(date string) (*Edition, error) {
 		return nil, fmt.Errorf("pick stories: %w", err)
 	}
 
-	featured, err := pickFeatured(rng)
-	if err != nil {
-		return nil, fmt.Errorf("pick featured: %w", err)
-	}
-
 	quotes, err := pickQuotes(rng, 3)
 	if err != nil {
 		return nil, fmt.Errorf("pick quotes: %w", err)
@@ -117,15 +112,31 @@ func generateEdition(date string) (*Edition, error) {
 		return nil, fmt.Errorf("pick historical: %w", err)
 	}
 
+	// Collect IDs to exclude from "Neu" column
+	excludeStoryIDs := make(map[int]bool)
+	for _, s := range stories {
+		excludeStoryIDs[s.ID] = true
+	}
+	excludeQuoteIDs := make(map[int]bool)
+	for _, q := range quotes {
+		excludeQuoteIDs[q.ID] = true
+	}
+	excludeHistoricalIDs := make(map[int]bool)
+	for _, h := range historical {
+		excludeHistoricalIDs[h.ID] = true
+	}
+
+	newEntries, err := pickNew(rng, excludeStoryIDs, excludeQuoteIDs, excludeHistoricalIDs, 4)
+	if err != nil {
+		return nil, fmt.Errorf("pick new: %w", err)
+	}
+
 	var totalStories int
 	db.DB.QueryRow("SELECT COUNT(*) FROM stories WHERE status IN ('unmoderated','approved')").Scan(&totalStories)
 
 	// Update shown_count
 	for _, s := range stories {
 		db.DB.Exec("UPDATE stories SET shown_count = shown_count + 1 WHERE id = ?", s.ID)
-	}
-	if featured != nil {
-		db.DB.Exec("UPDATE featured SET shown_count = shown_count + 1 WHERE id = ?", featured.ID)
 	}
 	for _, q := range quotes {
 		db.DB.Exec("UPDATE quotes SET shown_count = shown_count + 1 WHERE id = ?", q.ID)
@@ -137,11 +148,74 @@ func generateEdition(date string) (*Edition, error) {
 	return &Edition{
 		Date:         date,
 		Stories:      stories,
-		Featured:     featured,
+		New:          newEntries,
 		Quotes:       quotes,
 		Historical:   historical,
 		TotalStories: totalStories,
 	}, nil
+}
+
+func pickNew(rng *rand.Rand, excludeStoryIDs, excludeQuoteIDs, excludeHistoricalIDs map[int]bool, max int) ([]NewEntry, error) {
+	var entries []NewEntry
+
+	// Recent stories
+	rows, err := db.DB.Query("SELECT id, year, title, text FROM stories WHERE status IN ('unmoderated','approved') AND created_at >= date('now', '-1 month') ORDER BY created_at DESC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int
+		var year, title, text string
+		if err := rows.Scan(&id, &year, &title, &text); err != nil {
+			return nil, err
+		}
+		if !excludeStoryIDs[id] {
+			entries = append(entries, NewEntry{Type: "story", ID: id, Year: year, Title: title, Text: text})
+		}
+	}
+
+	// Recent quotes
+	rows2, err := db.DB.Query("SELECT id, text, attribution FROM quotes WHERE created_at >= date('now', '-1 month') ORDER BY created_at DESC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows2.Close()
+	for rows2.Next() {
+		var id int
+		var text, attribution string
+		if err := rows2.Scan(&id, &text, &attribution); err != nil {
+			return nil, err
+		}
+		if !excludeQuoteIDs[id] {
+			entries = append(entries, NewEntry{Type: "quote", ID: id, Text: text, Attribution: attribution})
+		}
+	}
+
+	// Recent historical
+	rows3, err := db.DB.Query("SELECT id, year, title, text FROM historical WHERE created_at >= date('now', '-1 month') ORDER BY created_at DESC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows3.Close()
+	for rows3.Next() {
+		var id int
+		var year, title, text string
+		if err := rows3.Scan(&id, &year, &title, &text); err != nil {
+			return nil, err
+		}
+		if !excludeHistoricalIDs[id] {
+			entries = append(entries, NewEntry{Type: "historical", ID: id, Year: year, Title: title, Text: text})
+		}
+	}
+
+	// Shuffle and limit
+	rng.Shuffle(len(entries), func(i, j int) { entries[i], entries[j] = entries[j], entries[i] })
+	if len(entries) > max {
+		entries = entries[:max]
+	}
+
+	return entries, nil
 }
 
 func pickStories(rng *rand.Rand, n int) ([]Story, error) {
@@ -174,35 +248,6 @@ func pickStories(rng *rand.Rand, n int) ([]Story, error) {
 		all = all[:n]
 	}
 	return all, nil
-}
-
-func pickFeatured(rng *rand.Rand) (*Featured, error) {
-	rows, err := db.DB.Query("SELECT id, year_range, title, intro, COALESCE(quote,''), COALESCE(outro,'') FROM featured ORDER BY shown_count ASC, id ASC")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var all []Featured
-	for rows.Next() {
-		var f Featured
-		if err := rows.Scan(&f.ID, &f.YearRange, &f.Title, &f.Intro, &f.Quote, &f.Outro); err != nil {
-			return nil, err
-		}
-		all = append(all, f)
-	}
-
-	if len(all) == 0 {
-		return nil, nil
-	}
-
-	// Pick from lowest shown_count
-	pool := all
-	if len(pool) > 5 {
-		pool = pool[:5]
-	}
-	pick := pool[rng.Intn(len(pool))]
-	return &pick, nil
 }
 
 func pickQuotes(rng *rand.Rand, n int) ([]Quote, error) {

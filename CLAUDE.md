@@ -14,8 +14,8 @@ Interaktiv: Besucher reichen Stories ein, Inhalte rotieren täglich, Pflege via 
 
 | Spalte | Inhalt | Stil |
 |---|---|---|
-| **Kurze Fälle** | Anonyme Kurzgeschichten über Scheitern (80-120 Wörter). Überschriften variieren im Muster | Hemingway: kurze Sätze, direkt, kein Pathos |
-| **Diese Woche** | Featured Story, länger, mit Zitat-Block | Größere Schrift, Drop Cap, italic Titel |
+| **Geschichten** | Anonyme Kurzgeschichten über Scheitern (80-120 Wörter). Überschriften variieren im Muster | Hemingway: kurze Sätze, direkt, kein Pathos |
+| **Aktuell** | Neueste Einträge (≤1 Monat) aus Stories, Zitate, Historisch – max 4, keine Duplikate | Typ-Label, gemischte Darstellung |
 | **Zahlen** | Statistiken + Einreichungsformular | Große Zahlen (Playfair Display), Live-Zähler |
 | **Zitate** | Bekannte Zitate über Fehler/Scheitern | Special Elite Font (Schreibmaschine) |
 | **Historisch** | Berühmte historische Fehlschläge/Zufallsentdeckungen | Italic Titel, Hemingway-Stil |
@@ -39,7 +39,7 @@ Browser  →  nginx-proxy (besteht)  →  Go-Server (:80)
 - `GET /api/edition` liefert täglich wechselnde Inhalte
 - Date-seeded: Alle Besucher sehen am selben Tag dasselbe
 - Bevorzugt Content mit niedrigstem `shown_count`
-- Pro Tag: 5 Stories, 1 Featured, 3 Quotes, 2 Historical
+- Pro Tag: 5 Stories, bis zu 4 Neu-Einträge (≤1 Monat), 3 Quotes, 2 Historical
 - Cache in `edition_cache` Tabelle
 
 ### Einreichung
@@ -58,7 +58,6 @@ Header: `Authorization: Bearer <ADMIN_TOKEN>`
 | GET | `/admin/submissions?status=unmoderated` | Einreichungen filtern |
 | PUT | `/admin/submissions/:id` | Status ändern (approved/hidden) |
 | POST | `/admin/stories` | Neue Story (status=approved) |
-| POST | `/admin/featured` | Neue Featured Story |
 | POST | `/admin/quotes` | Neues Zitat |
 | POST | `/admin/historical` | Neuer Historisch-Eintrag |
 | GET | `/admin/stats` | Übersicht |
@@ -68,7 +67,7 @@ Header: `Authorization: Bearer <ADMIN_TOKEN>`
 ### SQLite
 
 - Datenbank: `/data/fehlerundstolzdrauf.db` (Docker Volume)
-- Tabellen: `stories`, `featured`, `quotes`, `historical`, `edition_cache`
+- Tabellen: `stories`, `quotes`, `historical`, `edition_cache`
 - Seed-Daten in `data/seed.sql`
 
 ## Design
@@ -128,8 +127,7 @@ Wöchentliche Pflege via Claude Code:
 2. **Zitate generieren**: Neue Zitate einfügen
 3. **Historisch generieren**: Neue historische Stories
 4. **Stories schreiben**: Kurzgeschichten im Hemingway-Stil
-5. **Featured schreiben**: Längere Featured Stories
-6. **Statistik**: Übersicht Content-Mengen
+5. **Statistik**: Übersicht Content-Mengen
 
 ## Deployment
 
@@ -142,7 +140,7 @@ Wöchentliche Pflege via Claude Code:
 ## Workflow für Änderungen
 
 1. Entwickeln und testen auf `main`
-2. Lokal prüfen: `docker build -t fsd . && docker run --rm -p 8080:80 -e ADMIN_TOKEN=test --user $(id -u):$(id -g) -v ./data:/data fsd`
+2. Lokal prüfen: `docker build -t fsd . && docker run --rm -p 5000:80 -e ADMIN_TOKEN=test --user $(id -u):$(id -g) -v ./data:/data fsd`
 3. Fragen ob committen und pushen (auf `main`)
 4. Fragen ob deployen. Falls ja:
    - `git checkout deployment && git merge main && git push origin deployment`
