@@ -15,7 +15,10 @@
       "Bash(export ADMIN_TOKEN=test && curl -s -X POST -H \"Authorization: Bearer $ADMIN_TOKEN\" http://localhost:8080/admin/reset-edition)",
       "Bash(git -C /home/wolf/github-fehlerundstolzdrauf status)",
       "Bash(git -C /home/wolf/github-fehlerundstolzdrauf diff)",
-      "Bash(git -C /home/wolf/github-fehlerundstolzdrauf log --oneline -5)"
+      "Bash(git -C /home/wolf/github-fehlerundstolzdrauf log --oneline -5)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://fehlerundstolzdrauf.de/)",
+      "Bash(curl -s https://fehlerundstolzdrauf.de/ 2>&1 | head -20)",
+      "Bash(curl -s -X POST -H \"Authorization: Bearer $ADMIN_TOKEN\" https://fehlerundstolzdrauf.de/admin/reset-edition)"
     ]
   }
 }
