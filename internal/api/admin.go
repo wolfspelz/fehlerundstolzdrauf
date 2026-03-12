@@ -313,6 +313,79 @@ func HandleBackup(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+func HandleUpdate(w http.ResponseWriter, r *http.Request) {
+	// Path: /admin/{type}/{id}
+	path := strings.TrimPrefix(r.URL.Path, "/admin/")
+	parts := strings.Split(path, "/")
+	if len(parts) != 2 {
+		http.Error(w, "Invalid path", http.StatusBadRequest)
+		return
+	}
+
+	table := parts[0]
+	id, err := strconv.Atoi(parts[1])
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	// Whitelist tables and their updatable fields
+	type tableConfig struct {
+		fields []string
+	}
+	validTables := map[string]tableConfig{
+		"stories":    {fields: []string{"year", "title", "text"}},
+		"quotes":     {fields: []string{"text", "attribution"}},
+		"historical": {fields: []string{"year", "title", "text"}},
+	}
+
+	config, ok := validTables[table]
+	if !ok {
+		http.Error(w, "Invalid type", http.StatusBadRequest)
+		return
+	}
+
+	var raw map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&raw); err != nil {
+		http.Error(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
+
+	// Build SET clause from provided fields
+	var setClauses []string
+	var args []interface{}
+	for _, field := range config.fields {
+		if val, exists := raw[field]; exists {
+			setClauses = append(setClauses, field+" = ?")
+			args = append(args, val)
+		}
+	}
+
+	if len(setClauses) == 0 {
+		http.Error(w, "No valid fields to update", http.StatusBadRequest)
+		return
+	}
+
+	args = append(args, id)
+	query := "UPDATE " + table + " SET " + strings.Join(setClauses, ", ") + " WHERE id = ?"
+	result, err := db.DB.Exec(query, args...)
+	if err != nil {
+		log.Printf("Update error: %v", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	affected, _ := result.RowsAffected()
+	if affected == 0 {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
+	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+}
+
 func HandleDelete(w http.ResponseWriter, r *http.Request) {
 	// Path: /admin/{type}/{id}
 	path := strings.TrimPrefix(r.URL.Path, "/admin/")

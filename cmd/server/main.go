@@ -100,10 +100,16 @@ func main() {
 		path := strings.TrimPrefix(r.URL.Path, "/admin/")
 		parts := strings.Split(path, "/")
 
-		// Only handle DELETE for /{type}/{id} pattern
-		if r.Method == http.MethodDelete && len(parts) == 2 {
-			api.HandleDelete(w, r)
-			return
+		// Handle PUT and DELETE for /{type}/{id} pattern
+		if len(parts) == 2 {
+			if r.Method == http.MethodPut {
+				api.HandleUpdate(w, r)
+				return
+			}
+			if r.Method == http.MethodDelete {
+				api.HandleDelete(w, r)
+				return
+			}
 		}
 
 		// Don't interfere with other /admin/ routes already registered

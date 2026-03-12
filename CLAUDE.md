@@ -59,10 +59,13 @@ Header: `Authorization: Bearer <ADMIN_TOKEN>`
 | PUT | `/admin/submissions/:id` | Status ändern (approved/hidden) |
 | GET | `/admin/stories` | Alle Stories auflisten |
 | POST | `/admin/stories` | Neue Story (status=approved) |
+| PUT | `/admin/stories/:id` | Story bearbeiten (year/title/text) |
 | GET | `/admin/quotes` | Alle Zitate auflisten |
 | POST | `/admin/quotes` | Neues Zitat |
+| PUT | `/admin/quotes/:id` | Zitat bearbeiten (text/attribution) |
 | GET | `/admin/historical` | Alle Historisch-Einträge auflisten |
 | POST | `/admin/historical` | Neuer Historisch-Eintrag |
+| PUT | `/admin/historical/:id` | Historisch-Eintrag bearbeiten (year/title/text) |
 | GET | `/admin/stats` | Übersicht |
 | POST | `/admin/reset-edition` | Edition-Cache löschen + neuen Seed erzwingen |
 | POST | `/admin/backup` | Manuelles Backup aller Daten als SQL-Dump |

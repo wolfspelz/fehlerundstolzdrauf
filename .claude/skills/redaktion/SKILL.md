@@ -94,14 +94,35 @@ Manuelles Backup aller Daten als SQL-Dump. Zeigt Statistik und Dateigröße.
 curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/backup | jq .
 ```
 
-### 8. Löschen
+### 8. Bearbeiten
+
+Bestehende Einträge bearbeiten. Nur übergebene Felder werden geändert.
+
+```bash
+# Story bearbeiten (year, title, text)
+curl -s -X PUT -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: application/json" \
+  -d '{"title":"NEUER_TITEL"}' \
+  https://fehlerundstolzdrauf.de/admin/stories/ID
+
+# Zitat bearbeiten (text, attribution)
+curl -s -X PUT -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: application/json" \
+  -d '{"text":"NEUER_TEXT","attribution":"NEUE_PERSON"}' \
+  https://fehlerundstolzdrauf.de/admin/quotes/ID
+
+# Historisch bearbeiten (year, title, text)
+curl -s -X PUT -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: application/json" \
+  -d '{"title":"NEUER_TITEL"}' \
+  https://fehlerundstolzdrauf.de/admin/historical/ID
+```
+
+### 9. Löschen
 
 ```bash
 # Typ: stories, quotes, historical
 curl -s -X DELETE -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/TYP/ID
 ```
 
-### 9. Beenden
+### 10. Beenden
 
 Redaktion beenden. Keine weitere Aktion.
 
