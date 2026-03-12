@@ -47,21 +47,27 @@ func main() {
 		}
 	}))
 	http.HandleFunc("/admin/stories", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
+		if r.Method == http.MethodGet {
+			api.HandleListStories(w, r)
+		} else if r.Method == http.MethodPost {
 			api.HandleCreateStory(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/quotes", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
+		if r.Method == http.MethodGet {
+			api.HandleListQuotes(w, r)
+		} else if r.Method == http.MethodPost {
 			api.HandleCreateQuote(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/historical", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
+		if r.Method == http.MethodGet {
+			api.HandleListHistorical(w, r)
+		} else if r.Method == http.MethodPost {
 			api.HandleCreateHistorical(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

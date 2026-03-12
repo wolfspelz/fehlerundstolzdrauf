@@ -103,6 +103,97 @@ func HandleUpdateSubmission(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
 
+func HandleListStories(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.DB.Query("SELECT id, year, title, text, created_at, status, shown_count FROM stories ORDER BY id")
+	if err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	type Story struct {
+		ID         int    `json:"id"`
+		Year       string `json:"year"`
+		Title      string `json:"title"`
+		Text       string `json:"text"`
+		CreatedAt  string `json:"created_at"`
+		Status     string `json:"status"`
+		ShownCount int    `json:"shown_count"`
+	}
+
+	var results []Story
+	for rows.Next() {
+		var s Story
+		rows.Scan(&s.ID, &s.Year, &s.Title, &s.Text, &s.CreatedAt, &s.Status, &s.ShownCount)
+		results = append(results, s)
+	}
+	if results == nil {
+		results = []Story{}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
+func HandleListQuotes(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.DB.Query("SELECT id, text, attribution, shown_count FROM quotes ORDER BY id")
+	if err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	type Quote struct {
+		ID          int    `json:"id"`
+		Text        string `json:"text"`
+		Attribution string `json:"attribution"`
+		ShownCount  int    `json:"shown_count"`
+	}
+
+	var results []Quote
+	for rows.Next() {
+		var q Quote
+		rows.Scan(&q.ID, &q.Text, &q.Attribution, &q.ShownCount)
+		results = append(results, q)
+	}
+	if results == nil {
+		results = []Quote{}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
+func HandleListHistorical(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.DB.Query("SELECT id, year, title, text, shown_count FROM historical ORDER BY id")
+	if err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	type Historical struct {
+		ID         int    `json:"id"`
+		Year       string `json:"year"`
+		Title      string `json:"title"`
+		Text       string `json:"text"`
+		ShownCount int    `json:"shown_count"`
+	}
+
+	var results []Historical
+	for rows.Next() {
+		var h Historical
+		rows.Scan(&h.ID, &h.Year, &h.Title, &h.Text, &h.ShownCount)
+		results = append(results, h)
+	}
+	if results == nil {
+		results = []Historical{}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
 func HandleCreateStory(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Year  string `json:"year"`

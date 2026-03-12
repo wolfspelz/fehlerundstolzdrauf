@@ -39,6 +39,8 @@ Zeige jede unmoderierte Einreichung dem Benutzer mit den Optionen:
 1. Freigeben
 2. Verbergen
 3. Löschen
+4. Überspringen (weiter zur nächsten Einreichung ohne Aktion)
+5. Abbrechen (zurück zum Hauptmenü, restliche Einreichungen überspringen)
 
 ### 2. Zitate generieren
 
@@ -109,3 +111,20 @@ Redaktion beenden. Keine weitere Aktion.
 2. Fragen, welche Funktion gewünscht ist
 3. Ausführen
 4. Bei generierten Inhalten: Vorschau zeigen und Bestätigung abwarten, bevor sie eingefügt werden
+
+## Duplikatvermeidung
+
+Vor dem Generieren neuer Inhalte (Stories, Historisch, Zitate) IMMER zuerst die bestehenden Einträge von der Live-API abrufen:
+
+```bash
+# Alle Stories abrufen
+curl -s -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/stories
+
+# Alle Zitate abrufen
+curl -s -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/quotes
+
+# Alle historischen Einträge abrufen
+curl -s -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/historical
+```
+
+Anhand der abgerufenen Daten sicherstellen: keine ähnlichen Themen, Personen, Titel oder Inhalte wie bereits vorhandene Einträge. NICHT auf seed.sql zugreifen – nur die echten Daten von der API verwenden.

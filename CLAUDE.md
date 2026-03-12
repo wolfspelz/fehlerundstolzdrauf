@@ -57,8 +57,11 @@ Header: `Authorization: Bearer <ADMIN_TOKEN>`
 |---|---|---|
 | GET | `/admin/submissions?status=unmoderated` | Einreichungen filtern |
 | PUT | `/admin/submissions/:id` | Status ändern (approved/hidden) |
+| GET | `/admin/stories` | Alle Stories auflisten |
 | POST | `/admin/stories` | Neue Story (status=approved) |
+| GET | `/admin/quotes` | Alle Zitate auflisten |
 | POST | `/admin/quotes` | Neues Zitat |
+| GET | `/admin/historical` | Alle Historisch-Einträge auflisten |
 | POST | `/admin/historical` | Neuer Historisch-Eintrag |
 | GET | `/admin/stats` | Übersicht |
 | POST | `/admin/reset-edition` | Edition-Cache löschen + neuen Seed erzwingen |
