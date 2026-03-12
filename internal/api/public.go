@@ -102,9 +102,6 @@ func HandleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Invalidate today's cache so new story can appear
-	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Danke für deine Geschichte. Sie erscheint in einer der nächsten Ausgaben."})

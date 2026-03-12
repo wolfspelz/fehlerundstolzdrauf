@@ -78,12 +78,12 @@ curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: applic
 curl -s -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/stats | jq .
 ```
 
-### 6. Edition zurücksetzen
+### 6. Neue Ausgabe
 
-Cache löschen und neuen Seed erzwingen, damit `/api/edition` sofort neue Inhalte liefert (ohne bis morgen zu warten).
+Neue Ausgabe erzwingen: Cache löschen und neuen Seed generieren, damit `/api/edition` sofort neue Inhalte liefert (ohne bis morgen zu warten).
 
 ```bash
-curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/reset-edition
+curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" https://fehlerundstolzdrauf.de/admin/new-edition
 ```
 
 ### 7. Backup

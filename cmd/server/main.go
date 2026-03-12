@@ -73,9 +73,9 @@ func main() {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
-	http.HandleFunc("/admin/reset-edition", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/admin/new-edition", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
-			api.HandleResetEdition(w, r)
+			api.HandleNewEdition(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}

@@ -400,3 +400,171 @@ func pickHistorical(rng *rand.Rand, n int) ([]Historical, error) {
 func Today() string {
 	return time.Now().UTC().Format("2006-01-02")
 }
+
+// tableToEntryType maps DB table names to NewEntry.Type values
+func tableToEntryType(table string) string {
+	switch table {
+	case "stories":
+		return "story"
+	case "quotes":
+		return "quote"
+	default:
+		return table // "historical" stays "historical"
+	}
+}
+
+// UpdateCachedEntry updates a specific entry in the cached edition JSON without regenerating.
+func UpdateCachedEntry(date string, table string, id int, fields map[string]interface{}) {
+	var cached string
+	if db.DB.QueryRow("SELECT content_json FROM edition_cache WHERE date = ?", date).Scan(&cached) != nil {
+		return
+	}
+
+	var ed Edition
+	if json.Unmarshal([]byte(cached), &ed) != nil {
+		return
+	}
+
+	updated := false
+
+	switch table {
+	case "stories":
+		for i := range ed.Stories {
+			if ed.Stories[i].ID == id {
+				if v, ok := fields["year"].(string); ok {
+					ed.Stories[i].Year = v
+				}
+				if v, ok := fields["title"].(string); ok {
+					ed.Stories[i].Title = v
+				}
+				if v, ok := fields["text"].(string); ok {
+					ed.Stories[i].Text = v
+				}
+				updated = true
+			}
+		}
+	case "quotes":
+		for i := range ed.Quotes {
+			if ed.Quotes[i].ID == id {
+				if v, ok := fields["text"].(string); ok {
+					ed.Quotes[i].Text = v
+				}
+				if v, ok := fields["attribution"].(string); ok {
+					ed.Quotes[i].Attribution = v
+				}
+				updated = true
+			}
+		}
+	case "historical":
+		for i := range ed.Historical {
+			if ed.Historical[i].ID == id {
+				if v, ok := fields["year"].(string); ok {
+					ed.Historical[i].Year = v
+				}
+				if v, ok := fields["title"].(string); ok {
+					ed.Historical[i].Title = v
+				}
+				if v, ok := fields["text"].(string); ok {
+					ed.Historical[i].Text = v
+				}
+				updated = true
+			}
+		}
+	}
+
+	// Also update in New and Older sections
+	entryType := tableToEntryType(table)
+	for i := range ed.New {
+		if ed.New[i].Type == entryType && ed.New[i].ID == id {
+			if v, ok := fields["year"].(string); ok {
+				ed.New[i].Year = v
+			}
+			if v, ok := fields["title"].(string); ok {
+				ed.New[i].Title = v
+			}
+			if v, ok := fields["text"].(string); ok {
+				ed.New[i].Text = v
+			}
+			if v, ok := fields["attribution"].(string); ok {
+				ed.New[i].Attribution = v
+			}
+			updated = true
+		}
+	}
+	for i := range ed.Older {
+		if ed.Older[i].Type == entryType && ed.Older[i].ID == id {
+			if v, ok := fields["year"].(string); ok {
+				ed.Older[i].Year = v
+			}
+			if v, ok := fields["title"].(string); ok {
+				ed.Older[i].Title = v
+			}
+			if v, ok := fields["text"].(string); ok {
+				ed.Older[i].Text = v
+			}
+			if v, ok := fields["attribution"].(string); ok {
+				ed.Older[i].Attribution = v
+			}
+			updated = true
+		}
+	}
+
+	if updated {
+		data, _ := json.Marshal(ed)
+		db.DB.Exec("UPDATE edition_cache SET content_json = ? WHERE date = ?", string(data), date)
+	}
+}
+
+// RemoveCachedEntry removes a specific entry from the cached edition JSON.
+func RemoveCachedEntry(date string, table string, id int) {
+	var cached string
+	if db.DB.QueryRow("SELECT content_json FROM edition_cache WHERE date = ?", date).Scan(&cached) != nil {
+		return
+	}
+
+	var ed Edition
+	if json.Unmarshal([]byte(cached), &ed) != nil {
+		return
+	}
+
+	switch table {
+	case "stories":
+		for i := range ed.Stories {
+			if ed.Stories[i].ID == id {
+				ed.Stories = append(ed.Stories[:i], ed.Stories[i+1:]...)
+				break
+			}
+		}
+	case "quotes":
+		for i := range ed.Quotes {
+			if ed.Quotes[i].ID == id {
+				ed.Quotes = append(ed.Quotes[:i], ed.Quotes[i+1:]...)
+				break
+			}
+		}
+	case "historical":
+		for i := range ed.Historical {
+			if ed.Historical[i].ID == id {
+				ed.Historical = append(ed.Historical[:i], ed.Historical[i+1:]...)
+				break
+			}
+		}
+	}
+
+	entryType := tableToEntryType(table)
+	for i := range ed.New {
+		if ed.New[i].Type == entryType && ed.New[i].ID == id {
+			ed.New = append(ed.New[:i], ed.New[i+1:]...)
+			break
+		}
+	}
+	for i := range ed.Older {
+		if ed.Older[i].Type == entryType && ed.Older[i].ID == id {
+			ed.Older = append(ed.Older[:i], ed.Older[i+1:]...)
+			break
+		}
+	}
+
+	data, _ := json.Marshal(ed)
+	db.DB.Exec("UPDATE edition_cache SET content_json = ? WHERE date = ?", string(data), date)
+}

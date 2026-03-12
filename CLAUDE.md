@@ -67,7 +67,7 @@ Header: `Authorization: Bearer <ADMIN_TOKEN>`
 | POST | `/admin/historical` | Neuer Historisch-Eintrag |
 | PUT | `/admin/historical/:id` | Historisch-Eintrag bearbeiten (year/title/text) |
 | GET | `/admin/stats` | Übersicht |
-| POST | `/admin/reset-edition` | Edition-Cache löschen + neuen Seed erzwingen |
+| POST | `/admin/new-edition` | Neue Ausgabe erzwingen (Cache löschen + neuer Seed) |
 | POST | `/admin/backup` | Manuelles Backup aller Daten als SQL-Dump |
 | DELETE | `/admin/:type/:id` | Löschen |
 

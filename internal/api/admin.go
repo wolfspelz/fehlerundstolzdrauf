@@ -96,9 +96,6 @@ func HandleUpdateSubmission(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Invalidate cache
-	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
@@ -213,7 +210,6 @@ func HandleCreateStory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, _ := result.LastInsertId()
-	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -237,7 +233,6 @@ func HandleCreateQuote(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, _ := result.LastInsertId()
-	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
@@ -263,14 +258,13 @@ func HandleCreateHistorical(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, _ := result.LastInsertId()
-	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "status": "ok"})
 }
 
-func HandleResetEdition(w http.ResponseWriter, r *http.Request) {
+func HandleNewEdition(w http.ResponseWriter, r *http.Request) {
 	if err := rotation.ResetEdition(rotation.Today()); err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
@@ -380,7 +374,7 @@ func HandleUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
+	rotation.UpdateCachedEntry(rotation.Today(), table, id, raw)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
@@ -420,7 +414,7 @@ func HandleDelete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db.DB.Exec("DELETE FROM edition_cache WHERE date = ?", rotation.Today())
+	rotation.RemoveCachedEntry(rotation.Today(), table, id)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
