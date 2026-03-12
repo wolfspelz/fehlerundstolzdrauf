@@ -66,6 +66,15 @@ curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: applic
 
 Entwickle interaktiv mit dem Benutzer neue Kurzgeschichten im Hemingway-Stil. Max 500 Zeichen. Kurze Sätze. Direkt. Kein Pathos.
 
+**Titel-Variation**: Überschriften MÜSSEN im Muster variieren. NICHT alle nach dem Schema „Artikel + Substantiv" (z.B. „Die Bäckerei", „Der Laden", „Das Restaurant"). Stattdessen mischen zwischen:
+- Substantiv ohne Artikel: „Barcelona", „Geduld", „Marathon"
+- Adjektiv + Substantiv: „Vier Jahre Jura", „Achtzehn Absagen"
+- Zeitangaben: „Zu früh", „Drei Semester Physik"
+- Aktionen/Verben: „Blackout am Mikrofon", „Niemand brauchte sie"
+- Einzelwörter: „Podcast", „Chinesisch"
+
+Vor dem Generieren die bestehenden Titel prüfen und ein Muster wählen, das unterrepräsentiert ist.
+
 ```bash
 curl -s -X POST -H "Authorization: Bearer $ADMIN_TOKEN" -H "Content-Type: application/json" \
   -d '{"year":"JAHR","title":"TITEL","text":"TEXT"}' \

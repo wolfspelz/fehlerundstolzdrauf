@@ -51,7 +51,17 @@
       "Bash(pkill -f \"./server\" 2>/dev/null; echo \"done\")",
       "Bash(curl -s https://fehlerundstolzdrauf.de/api/edition | python3 -m json.tool 2>&1 | head -20)",
       "Bash(curl -s https://fehlerundstolzdrauf.de/api/edition | python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('has featured:', 'featured' in d\\); print\\('has new:', 'new' in d\\); print\\('new value:', d.get\\('new', 'MISSING'\\)\\)\")",
-      "Bash(pkill -f \"./server\" 2>/dev/null; echo \"stopped\")"
+      "Bash(pkill -f \"./server\" 2>/dev/null; echo \"stopped\")",
+      "Bash(DB_PATH=data/fehlerundstolzdrauf.db go run ./cmd/server/)",
+      "Bash(export PATH=$PATH:/usr/local/go/bin && DB_PATH=data/fehlerundstolzdrauf.db go run ./cmd/server/)",
+      "Bash(export PATH=$PATH:/usr/local/go/bin && PORT=5000 DB_PATH=data/fehlerundstolzdrauf.db go run ./cmd/server/)",
+      "Bash(curl -s http://localhost:5000/api/edition | head -200)",
+      "Bash(curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" https://fehlerundstolzdrauf.de/admin/stories | python3 -c \"import sys,json; stories=json.load\\(sys.stdin\\); [print\\(f\\\\\"  {s['id']:3d} | {s['year']} | {s['title']}\\\\\"\\) for s in stories]\")",
+      "Bash(curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" https://fehlerundstolzdrauf.de/admin/stories | jq '[.[] | {id, year, title, text}]')",
+      "Bash(curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" https://fehlerundstolzdrauf.de/admin/stories)",
+      "Bash(curl -s -X POST -H \"Authorization: Bearer $ADMIN_TOKEN\" https://fehlerundstolzdrauf.de/admin/new-edition)",
+      "Bash(curl -s -H \"Authorization: Bearer $ADMIN_TOKEN\" https://fehlerundstolzdrauf.de/admin/stories | python3 -c \"import sys,json; [print\\(f'{s[\\\\\"id\\\\\"]}: {s[\\\\\"title\\\\\"]}'\\) for s in json.loads\\(sys.stdin.read\\(\\)\\)]\")",
+      "Bash(curl -s https://fehlerundstolzdrauf.de/api/edition | python3 -c \"import sys,json; d=json.loads\\(sys.stdin.read\\(\\)\\); print\\(sorted\\(d.keys\\(\\)\\)\\)\")"
     ]
   }
 }

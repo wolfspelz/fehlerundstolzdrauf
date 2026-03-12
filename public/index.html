@@ -446,6 +446,18 @@
         <p class="entry-text">Geschichten eingereicht.</p>
       </div>
 
+      <div class="entry" style="display:flex;gap:0;">
+        <div style="flex:1;text-align:center;">
+          <span class="big-number" id="total-quotes" style="font-size:2.2rem;">—</span>
+          <p class="entry-text" style="text-align:center;">Zitate</p>
+        </div>
+        <div style="width:1px;background:var(--line);margin:0 12px;"></div>
+        <div style="flex:1;text-align:center;">
+          <span class="big-number" id="total-historical" style="font-size:2.2rem;">—</span>
+          <p class="entry-text" style="text-align:center;">Historien</p>
+        </div>
+      </div>
+
       <div class="entry">
         <span class="big-number" style="color:var(--red);">91%</span>
         <p class="entry-text">Sagen, das Scheitern war notwendig.</p>
@@ -507,6 +519,12 @@
       renderHistorical(ed.historical || []);
       if (ed.total_stories) {
         document.getElementById('total-stories').textContent = ed.total_stories.toLocaleString('de-DE');
+      }
+      if (ed.total_quotes) {
+        document.getElementById('total-quotes').textContent = ed.total_quotes.toLocaleString('de-DE');
+      }
+      if (ed.total_historical) {
+        document.getElementById('total-historical').textContent = ed.total_historical.toLocaleString('de-DE');
       }
     })
     .catch(function() {});
