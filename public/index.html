@@ -285,7 +285,7 @@
   }
 
   .submit-form textarea {
-    min-height: 100px;
+    min-height: 200px;
     resize: vertical;
     line-height: 1.5;
   }
@@ -467,7 +467,7 @@
       </div>
 
       <div class="submit-form" style="margin-top:auto;">
-        <div class="col-label" style="margin-bottom:12px;">Einreichen</div>
+        <div class="col-label" style="margin-bottom:12px;">Deine Geschichte</div>
         <form id="submit-form">
           <input type="text" id="submit-year" placeholder="Jahr (z.B. 2019)" maxlength="20" required>
           <input type="text" id="submit-title" placeholder="Titel (z.B. Die Bäckerei)" maxlength="100" required>
@@ -535,20 +535,17 @@
   function renderNewEntry(item) {
     if (item.type === 'story') {
       return '<div class="entry">' +
-        '<span class="new-type-label">Geschichte</span>' +
         '<span class="entry-year">' + esc(item.year) + '</span>' +
         '<div class="entry-title">' + esc(item.title) + '</div>' +
         '<p class="entry-text">' + esc(item.text) + '</p>' +
         '</div>';
     } else if (item.type === 'quote') {
       return '<div class="quote-entry">' +
-        '<span class="new-type-label">Zitat</span>' +
         '<blockquote>\u201E' + esc(item.text) + '\u201C</blockquote>' +
         '<cite>\u2014 ' + esc(item.attribution) + '</cite>' +
         '</div>';
     } else if (item.type === 'historical') {
       return '<div class="entry">' +
-        '<span class="new-type-label">Historisch</span>' +
         '<span class="entry-year">' + esc(item.year) + '</span>' +
         '<div class="entry-title italic">' + esc(item.title) + '</div>' +
         '<p class="entry-text">' + esc(item.text) + '</p>' +
