@@ -468,6 +468,11 @@
         <p class="entry-text">Regel: Kein Name. Keine Entschuldigung. Nur was passiert ist. Und was danach kam.</p>
       </div>
 
+      <div class="entry">
+        <span class="big-number" id="unmoderated-count">0</span>
+        <p class="entry-text">Unmoderierte Einreichungen warten auf Prüfung.</p>
+      </div>
+
       <div class="submit-form" style="margin-top:auto;">
         <div class="col-label" style="margin-bottom:12px;">Deine Geschichte</div>
         <form id="submit-form">
@@ -525,6 +530,9 @@
       }
       if (ed.total_historical) {
         document.getElementById('total-historical').textContent = ed.total_historical.toLocaleString('de-DE');
+      }
+      if (ed.unmoderated_count !== undefined) {
+        document.getElementById('unmoderated-count').textContent = ed.unmoderated_count.toLocaleString('de-DE');
       }
     })
     .catch(function() {});
