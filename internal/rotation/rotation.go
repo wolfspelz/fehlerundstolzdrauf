@@ -48,9 +48,10 @@ type Edition struct {
 	Older           []NewEntry   `json:"older"`
 	Quotes          []Quote      `json:"quotes"`
 	Historical      []Historical `json:"historical"`
-	TotalStories    int          `json:"total_stories"`
-	TotalQuotes     int          `json:"total_quotes"`
-	TotalHistorical int          `json:"total_historical"`
+	TotalStories      int          `json:"total_stories"`
+	TotalQuotes       int          `json:"total_quotes"`
+	TotalHistorical   int          `json:"total_historical"`
+	UnmoderatedCount  int          `json:"unmoderated_count"`
 }
 
 func dateToSeed(date string) int64 {
@@ -157,6 +158,8 @@ func generateEdition(date string) (*Edition, error) {
 	db.DB.QueryRow("SELECT COUNT(*) FROM quotes").Scan(&totalQuotes)
 	var totalHistorical int
 	db.DB.QueryRow("SELECT COUNT(*) FROM historical").Scan(&totalHistorical)
+	var unmoderatedCount int
+	db.DB.QueryRow("SELECT COUNT(*) FROM stories WHERE status = 'unmoderated'").Scan(&unmoderatedCount)
 
 	// Update shown_count
 	for _, s := range stories {
@@ -176,9 +179,10 @@ func generateEdition(date string) (*Edition, error) {
 		Older:        olderEntries,
 		Quotes:       quotes,
 		Historical:   historical,
-		TotalStories:    totalStories,
-		TotalQuotes:     totalQuotes,
-		TotalHistorical: totalHistorical,
+		TotalStories:      totalStories,
+		TotalQuotes:       totalQuotes,
+		TotalHistorical:   totalHistorical,
+		UnmoderatedCount:  unmoderatedCount,
 	}, nil
 }
 
