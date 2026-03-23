@@ -42,6 +42,27 @@ type SubmitRequest struct {
 	Text  string `json:"text"`
 }
 
+func HandlePublicStats(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var totalStories, totalQuotes, totalHistorical, unmoderatedCount int
+	db.DB.QueryRow("SELECT COUNT(*) FROM stories WHERE status IN ('unmoderated','approved')").Scan(&totalStories)
+	db.DB.QueryRow("SELECT COUNT(*) FROM quotes").Scan(&totalQuotes)
+	db.DB.QueryRow("SELECT COUNT(*) FROM historical").Scan(&totalHistorical)
+	db.DB.QueryRow("SELECT COUNT(*) FROM stories WHERE status = 'unmoderated'").Scan(&unmoderatedCount)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]int{
+		"total_stories":     totalStories,
+		"total_quotes":      totalQuotes,
+		"total_historical":  totalHistorical,
+		"unmoderated_count": unmoderatedCount,
+	})
+}
+
 func HandleSubmit(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

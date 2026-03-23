@@ -522,18 +522,17 @@
       renderNew(ed.new || [], ed.older || []);
       renderQuotes(ed.quotes || []);
       renderHistorical(ed.historical || []);
-      if (ed.total_stories) {
-        document.getElementById('total-stories').textContent = ed.total_stories.toLocaleString('de-DE');
-      }
-      if (ed.total_quotes) {
-        document.getElementById('total-quotes').textContent = ed.total_quotes.toLocaleString('de-DE');
-      }
-      if (ed.total_historical) {
-        document.getElementById('total-historical').textContent = ed.total_historical.toLocaleString('de-DE');
-      }
-      if (ed.unmoderated_count !== undefined) {
-        document.getElementById('unmoderated-count').textContent = ed.unmoderated_count.toLocaleString('de-DE');
-      }
+    })
+    .catch(function() {});
+
+  // Live stats (not cached)
+  fetch('/api/stats')
+    .then(function(r) { return r.json(); })
+    .then(function(st) {
+      document.getElementById('total-stories').textContent = st.total_stories.toLocaleString('de-DE');
+      document.getElementById('total-quotes').textContent = st.total_quotes.toLocaleString('de-DE');
+      document.getElementById('total-historical').textContent = st.total_historical.toLocaleString('de-DE');
+      document.getElementById('unmoderated-count').textContent = st.unmoderated_count.toLocaleString('de-DE');
     })
     .catch(function() {});
 

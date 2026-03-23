@@ -30,6 +30,7 @@ func main() {
 	// Public API
 	http.HandleFunc("/api/edition", api.HandleEdition)
 	http.HandleFunc("/api/submit", api.HandleSubmit)
+	http.HandleFunc("/api/stats", api.HandlePublicStats)
 
 	// Admin API
 	http.HandleFunc("/admin/submissions", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
