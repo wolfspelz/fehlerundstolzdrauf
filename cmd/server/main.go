@@ -28,69 +28,69 @@ func main() {
 	defer db.DB.Close()
 
 	// Public API
-	http.HandleFunc("/api/edition", api.HandleEdition)
-	http.HandleFunc("/api/submit", api.HandleSubmit)
+	http.HandleFunc("/api/edition", api.HandlePublicEdition)
+	http.HandleFunc("/api/submit", api.HandlePublicSubmit)
 	http.HandleFunc("/api/stats", api.HandlePublicStats)
 
 	// Admin API
 	http.HandleFunc("/admin/submissions", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			api.HandleSubmissions(w, r)
+			api.HandleAdminSubmissions(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/submissions/", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPut {
-			api.HandleUpdateSubmission(w, r)
+			api.HandleAdminUpdateSubmission(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/stories", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			api.HandleListStories(w, r)
+			api.HandleAdminListStories(w, r)
 		} else if r.Method == http.MethodPost {
-			api.HandleCreateStory(w, r)
+			api.HandleAdminCreateStory(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/quotes", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			api.HandleListQuotes(w, r)
+			api.HandleAdminListQuotes(w, r)
 		} else if r.Method == http.MethodPost {
-			api.HandleCreateQuote(w, r)
+			api.HandleAdminCreateQuote(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/historical", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			api.HandleListHistorical(w, r)
+			api.HandleAdminListHistorical(w, r)
 		} else if r.Method == http.MethodPost {
-			api.HandleCreateHistorical(w, r)
+			api.HandleAdminCreateHistorical(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/new-edition", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
-			api.HandleNewEdition(w, r)
+			api.HandleAdminNewEdition(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/backup", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
-			api.HandleBackup(w, r)
+			api.HandleAdminBackup(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 	http.HandleFunc("/admin/stats", api.AdminAuth(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			api.HandleStats(w, r)
+			api.HandleAdminStats(w, r)
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
@@ -104,11 +104,11 @@ func main() {
 		// Handle PUT and DELETE for /{type}/{id} pattern
 		if len(parts) == 2 {
 			if r.Method == http.MethodPut {
-				api.HandleUpdate(w, r)
+				api.HandleAdminUpdate(w, r)
 				return
 			}
 			if r.Method == http.MethodDelete {
-				api.HandleDelete(w, r)
+				api.HandleAdminDelete(w, r)
 				return
 			}
 		}

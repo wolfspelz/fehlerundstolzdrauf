@@ -24,7 +24,7 @@ func AdminAuth(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func HandleSubmissions(w http.ResponseWriter, r *http.Request) {
+func HandleAdminSubmissions(w http.ResponseWriter, r *http.Request) {
 	status := r.URL.Query().Get("status")
 	if status == "" {
 		status = "unmoderated"
@@ -62,7 +62,7 @@ func HandleSubmissions(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(results)
 }
 
-func HandleUpdateSubmission(w http.ResponseWriter, r *http.Request) {
+func HandleAdminUpdateSubmission(w http.ResponseWriter, r *http.Request) {
 	// Extract ID from path: /admin/submissions/123
 	parts := strings.Split(strings.TrimPrefix(r.URL.Path, "/admin/submissions/"), "/")
 	id, err := strconv.Atoi(parts[0])
@@ -100,7 +100,7 @@ func HandleUpdateSubmission(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
 
-func HandleListStories(w http.ResponseWriter, r *http.Request) {
+func HandleAdminListStories(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.DB.Query("SELECT id, year, title, text, created_at, status, shown_count FROM stories ORDER BY id")
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
@@ -132,7 +132,7 @@ func HandleListStories(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(results)
 }
 
-func HandleListQuotes(w http.ResponseWriter, r *http.Request) {
+func HandleAdminListQuotes(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.DB.Query("SELECT id, text, attribution, shown_count FROM quotes ORDER BY id")
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
@@ -161,7 +161,7 @@ func HandleListQuotes(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(results)
 }
 
-func HandleListHistorical(w http.ResponseWriter, r *http.Request) {
+func HandleAdminListHistorical(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.DB.Query("SELECT id, year, title, text, shown_count FROM historical ORDER BY id")
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
@@ -191,7 +191,7 @@ func HandleListHistorical(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(results)
 }
 
-func HandleCreateStory(w http.ResponseWriter, r *http.Request) {
+func HandleAdminCreateStory(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Year  string `json:"year"`
 		Title string `json:"title"`
@@ -216,7 +216,7 @@ func HandleCreateStory(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "status": "ok"})
 }
 
-func HandleCreateQuote(w http.ResponseWriter, r *http.Request) {
+func HandleAdminCreateQuote(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Text        string `json:"text"`
 		Attribution string `json:"attribution"`
@@ -239,7 +239,7 @@ func HandleCreateQuote(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "status": "ok"})
 }
 
-func HandleCreateHistorical(w http.ResponseWriter, r *http.Request) {
+func HandleAdminCreateHistorical(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Year  string `json:"year"`
 		Title string `json:"title"`
@@ -264,7 +264,7 @@ func HandleCreateHistorical(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]interface{}{"id": id, "status": "ok"})
 }
 
-func HandleNewEdition(w http.ResponseWriter, r *http.Request) {
+func HandleAdminNewEdition(w http.ResponseWriter, r *http.Request) {
 	if err := rotation.ResetEdition(rotation.Today()); err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
@@ -273,7 +273,7 @@ func HandleNewEdition(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
 
-func HandleStats(w http.ResponseWriter, r *http.Request) {
+func HandleAdminStats(w http.ResponseWriter, r *http.Request) {
 	stats := make(map[string]interface{})
 
 	var total, approved, unmoderated, hidden int
@@ -297,7 +297,7 @@ func HandleStats(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(stats)
 }
 
-func HandleBackup(w http.ResponseWriter, r *http.Request) {
+func HandleAdminBackup(w http.ResponseWriter, r *http.Request) {
 	result, err := db.Backup()
 	if err != nil {
 		http.Error(w, "Backup failed: "+err.Error(), http.StatusInternalServerError)
@@ -307,7 +307,7 @@ func HandleBackup(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
-func HandleUpdate(w http.ResponseWriter, r *http.Request) {
+func HandleAdminUpdate(w http.ResponseWriter, r *http.Request) {
 	// Path: /admin/{type}/{id}
 	path := strings.TrimPrefix(r.URL.Path, "/admin/")
 	parts := strings.Split(path, "/")
@@ -380,7 +380,7 @@ func HandleUpdate(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
 
-func HandleDelete(w http.ResponseWriter, r *http.Request) {
+func HandleAdminDelete(w http.ResponseWriter, r *http.Request) {
 	// Path: /admin/{type}/{id}
 	path := strings.TrimPrefix(r.URL.Path, "/admin/")
 	parts := strings.Split(path, "/")

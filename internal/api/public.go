@@ -19,7 +19,7 @@ var (
 	rateMap   = make(map[string]time.Time)
 )
 
-func HandleEdition(w http.ResponseWriter, r *http.Request) {
+func HandlePublicEdition(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -63,7 +63,7 @@ func HandlePublicStats(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func HandleSubmit(w http.ResponseWriter, r *http.Request) {
+func HandlePublicSubmit(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
