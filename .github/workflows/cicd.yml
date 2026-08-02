@@ -33,6 +33,7 @@ jobs:
           host: ${{ secrets.SERVER_HOSTNAME }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          script_stop: true
           script: |
             docker image pull wolfspelz/fehlerundstolzdrauf
             docker container stop fehlerundstolzdrauf-prod
